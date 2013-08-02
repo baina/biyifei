@@ -14,7 +14,7 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 local redis = require 'redis'
 local params = {
     host = '127.0.0.1',
-    port = 6379,
+    port = 6389,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
@@ -79,7 +79,7 @@ print(session)
 print("---------------------------")
 -- ngx.say(citydep, cityarr)
 local baseurl = "http://flight.elong.com/%s-%s/cn_day%s.html"
-local idxurl = "http://localhost:18081/"
+local idxurl = "http://localhost:6001/"
 local resp = {};
 print(string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime));
 print("---------------------------")
@@ -88,10 +88,13 @@ local url = string.format(baseurl, string.lower(citydep), string.lower(cityarr),
 local body, code, headers = http.request(url)
 if code == 200 then
 	for k in string.gmatch(body, 'flightno="(%w+)"') do
+		while k do
 			local res, err = client:sadd("elong:flt:" .. session, k)
 			if res then
 				client:expire("elong:flt:" .. session, 60)
 			end
+			break;
+		end
 	end
 	local flts = client:smembers("elong:flt:" .. session)
 	if flts ~= nil then
