@@ -14,14 +14,13 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 local redis = require 'redis'
 local params = {
     host = '127.0.0.1',
-    port = 6389,
+    port = 6379,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
 -- commands defined in the redis.commands table are available at module
 -- level and are used to populate each new client instance.
 redis.commands.hset = redis.command('hset')
-redis.commands.hdel = redis.command('hdel')
 redis.commands.sadd = redis.command('sadd')
 redis.commands.zadd = redis.command('zadd')
 redis.commands.smembers = redis.command('smembers')
@@ -29,7 +28,6 @@ redis.commands.keys = redis.command('keys')
 redis.commands.sdiff = redis.command('sdiff')
 redis.commands.zrange = redis.command('zrange')
 redis.commands.expire = redis.command('expire')
-
 function sleep(n)
    socket.select(nil, nil, n)
 end
@@ -50,6 +48,10 @@ end
 local org = string.sub(arg[1], 1, 3);
 local dst = string.sub(arg[1], 5, 7);
 local t = string.sub(arg[1], 9, -2);
+
+-- local org = "HGH";
+-- local dst = "CGQ";
+-- local t = 20130802;
 -- end mission get.
 local luasql = require "luasql.mysql"
 local env = assert(luasql.mysql())
@@ -79,7 +81,7 @@ print(session)
 print("---------------------------")
 -- ngx.say(citydep, cityarr)
 local baseurl = "http://flight.elong.com/%s-%s/cn_day%s.html"
-local idxurl = "http://localhost:6001/"
+local idxurl = "http://localhost:18081/"
 local resp = {};
 print(string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime));
 print("---------------------------")
@@ -88,87 +90,77 @@ local url = string.format(baseurl, string.lower(citydep), string.lower(cityarr),
 local body, code, headers = http.request(url)
 if code == 200 then
 	for k in string.gmatch(body, 'flightno="(%w+)"') do
-		while k do
-			local res, err = client:sadd("elong:flt:" .. session, k)
-			if res then
-				client:expire("elong:flt:" .. session, 60)
-			end
-			break;
+		local res, err = client:sadd("elong:flt:" .. session, k)
+		if res then
+			client:expire("elong:flt:" .. session, 60)
 		end
 	end
 	local flts = client:smembers("elong:flt:" .. session)
-	if flts ~= nil then
-		for f = 1, table.getn(flts) do
-			print("当前航班" .. f .. "/" .. table.getn(flts) .. ",正在处理" .. flts[f]);
-			print("---------------------------")
-			local fltmuli = "idx-elong/" .. string.lower(org) .. "/" .. string.lower(dst) .. "/" .. string.lower(flts[f]) .. "/" .. t .. "/";
-			-- table.insert(reqs, { fltmuli })
-			print(idxurl .. fltmuli)
-			local body, code, headers = http.request(idxurl .. fltmuli)
-			if code == 200 then
-	            local allprice = JSON.decode(body);
-	            if allprice then
-					-- print(fltmuli, flts[f], table.getn(allprice.value[1]))
-					local tmpres = {};
-					local priceinfo = {};
-					local salelimit = {};
-					if allprice.value[1].CouponList[1] ~= nil then
-						priceinfo["Price"] = allprice.value[1].SalePrice .. "(-" .. allprice.value[1].CouponList[1].SalePrice .. ")";
-						salelimit["PolicyID"] = allprice.value[1].CouponList[1].Id;
-					else
-						priceinfo["Price"] = allprice.value[1].SalePrice;
-						salelimit["PolicyID"] = allprice.value[1].FareId;
-					end
-					priceinfo["StandardPrice"] = allprice.value[1].OriginalSalesPrice;
-					if allprice.value[1].Index == 0 then
-						priceinfo["IsLowestPrice"] = true;
-					else
-						priceinfo["IsLowestPrice"] = false;
-					end
-					priceinfo["Rate"] = allprice.value[1].ClassTitle;
-					priceinfo["PriceType"] = allprice.value[1].ClassTitle;
-					salelimit["Remarks"] = allprice.value[1].PreSaleDate;
-					local FlightTime = "";
-					for a, b, c, x, y, z in string.gmatch(allprice.value[1].Rule, "(%a+)|(%d+)|(%d+)|(.*)|(%a+)|(%a+)|(%a+)|(.*)") do
-						FlightTime = x;
-					end
-					local noteurl = "http://flight.elong.com/isajax/flightajax/GetRestrictionRuleInfo?type=Adult&arrivecity=%s&departcity=%s&daycount=%s&language=cn&viewpath=~/views/list/oneway.aspx&pagename=list&flighttype=0&seatlevel=Y&requestInfo.AirCorpCode=%s&requestInfo.FareItemID=0&requestInfo.FlightClass=%s&requestInfo.FlightTime=%s&requestInfo.IsKSeat=%s&requestInfo.IsPromotion=%s&requestInfo.IssueCityCode=%s&requestInfo.IsRTPromotion=False&requestInfo.UseType=Booking&requestInfo.OrderFromId=0&requestInfo.Language=CN&requestInfo.Category=0&requestInfo.IsSearchCache=false&requestInfo.SearchUserLevel=0&requestInfo.IsPreLoad=false";
-					noteurl = string.format(noteurl, string.lower(cityarr), string.lower(citydep), elotime, string.upper(string.sub(flts[f], 1, 2)), allprice.value[1].FlightClassNumber, _formencodepart(FlightTime), tostring(allprice.value[1].IsKSeat), tostring(allprice.value[1].IsPackagePromotion), org);
-					-- print(noteurl)
-					sleep(3)
-					local body, code, headers = http.request(noteurl)
-					if code == 200 then
-			            local allrules = JSON.decode(body);
-			            if allrules then
-							salelimit["Notes"] = allrules.value;
-						else
-							salelimit["Notes"] = JSON.null;
-						end
+	for f = 1, table.getn(flts) do
+		print("当前航班" .. f .. "/" .. table.getn(flts) .. ",正在处理" .. flts[f]);
+		print("---------------------------")
+		local fltmuli = "idx-elong/" .. string.lower(org) .. "/" .. string.lower(dst) .. "/" .. string.lower(flts[f]) .. "/" .. t .. "/";
+		-- table.insert(reqs, { fltmuli })
+		print(idxurl .. fltmuli)
+		local body, code, headers = http.request(idxurl .. fltmuli)
+		if code == 200 then
+            local allprice = JSON.decode(body);
+            if allprice then
+				-- print(fltmuli, flts[f], table.getn(allprice.value[1]))
+				local tmpres = {};
+				local priceinfo = {};
+				local salelimit = {};
+				if allprice.value[1].CouponList[1] ~= nil then
+					priceinfo["Price"] = allprice.value[1].SalePrice .. "(-" .. allprice.value[1].CouponList[1].SalePrice .. ")";
+					salelimit["PolicyID"] = allprice.value[1].CouponList[1].Id;
+				else
+					priceinfo["Price"] = allprice.value[1].SalePrice;
+					salelimit["PolicyID"] = allprice.value[1].FareId;
+				end
+				priceinfo["StandardPrice"] = allprice.value[1].OriginalSalesPrice;
+				if allprice.value[1].Index == 0 then
+					priceinfo["IsLowestPrice"] = true;
+				else
+					priceinfo["IsLowestPrice"] = false;
+				end
+				priceinfo["Rate"] = allprice.value[1].ClassTitle;
+				priceinfo["PriceType"] = allprice.value[1].ClassTitle;
+				salelimit["Remarks"] = allprice.value[1].PreSaleDate;
+				local FlightTime = "";
+				for a, b, c, x, y, z in string.gmatch(allprice.value[1].Rule, "(%a+)|(%d+)|(%d+)|(.*)|(%a+)|(%a+)|(%a+)|(.*)") do
+					FlightTime = x;
+				end
+				local noteurl = "http://flight.elong.com/isajax/flightajax/GetRestrictionRuleInfo?type=Adult&arrivecity=%s&departcity=%s&daycount=%s&language=cn&viewpath=~/views/list/oneway.aspx&pagename=list&flighttype=0&seatlevel=Y&requestInfo.AirCorpCode=%s&requestInfo.FareItemID=0&requestInfo.FlightClass=%s&requestInfo.FlightTime=%s&requestInfo.IsKSeat=%s&requestInfo.IsPromotion=%s&requestInfo.IssueCityCode=%s&requestInfo.IsRTPromotion=False&requestInfo.UseType=Booking&requestInfo.OrderFromId=0&requestInfo.Language=CN&requestInfo.Category=0&requestInfo.IsSearchCache=false&requestInfo.SearchUserLevel=0&requestInfo.IsPreLoad=false";
+				noteurl = string.format(noteurl, string.lower(cityarr), string.lower(citydep), elotime, string.upper(string.sub(flts[f], 1, 2)), allprice.value[1].FlightClassNumber, _formencodepart(FlightTime), tostring(allprice.value[1].IsKSeat), tostring(allprice.value[1].IsPackagePromotion), org);
+				-- print(noteurl)
+				sleep(3)
+				local body, code, headers = http.request(noteurl)
+				if code == 200 then
+		            local allrules = JSON.decode(body);
+		            if allrules then
+						salelimit["Notes"] = allrules.value;
 					else
 						salelimit["Notes"] = JSON.null;
 					end
-					tmpres["priceinfo"] = priceinfo;
-					tmpres["salelimit"] = salelimit;
-					-- resp[flts[f]] = tmpres;
-					-- print(JSON.encode(tmpres))
-					-- print(JSON.encode(resp));
-					client:hdel('elong:' .. string.lower(org) .. '/' .. string.lower(dst) .. '/' .. t .. '/', flts[f]);
-					local ok, err = client:hset('elong:' .. string.lower(org) .. '/' .. string.lower(dst) .. '/' .. t .. '/', flts[f], JSON.encode(tmpres))
-					if ok then
-						print("------------ok---------------")
-					else
-						print(flts[f], err)
-					end
 				else
-					print(body)
-	            end
-			else
-				print(code, body)
-			end
-			sleep(7)
+					salelimit["Notes"] = JSON.null;
+				end
+				tmpres["priceinfo"] = priceinfo;
+				tmpres["salelimit"] = salelimit;
+				-- resp[flts[f]] = tmpres;
+				-- print(JSON.encode(tmpres))
+				-- print(JSON.encode(resp));
+				local ok, err = client:hset('elong:' .. string.lower(org) .. '/' .. string.lower(dst) .. '/' .. t .. '/', flts[f], JSON.encode(tmpres))
+				if ok then
+					print("------------ok---------------")
+				else
+					print(err)
+				end
+            end
+		else
+			print(code, body)
 		end
-	else
-		print("------------no flight-------------")
+		sleep(7)
 	end
 else
 	print(code, body)

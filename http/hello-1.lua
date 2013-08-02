@@ -1,3 +1,6 @@
+local socket = require("socket")
+local http = require("socket.http")
+local ltn12 = require 'ltn12'
 local function _formencodepart(s)
 	if type(s) == number then
 		return s
@@ -24,4 +27,28 @@ end
 
 
 
+local respbody = {};
+local body, code, headers, status = http.request {
+	url = "http://www.elong.com/",
+	--- proxy = "http://127.0.0.1:8888",
+	--- timeout = 3000,
+	method = "GET", -- POST or GET
+	-- add post content-type and cookie
+	headers = { ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6" },
+	-- body = formdata,
+	-- source = ltn12.source.string(form_data);
+	sink = ltn12.sink.table(respbody)
+}
 
+print(code)
+for k, v in pairs(headers) do
+	print(k, v);
+end
+print(status)
+print(body)
+
+print(table.getn(respbody))
+local reslen = table.getn(respbody)
+for i = 1, reslen do
+	print(respbody[i])
+end
