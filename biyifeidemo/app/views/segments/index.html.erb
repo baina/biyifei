@@ -1,0 +1,24 @@
+<h1>Listing segments</h1>
+
+<table>
+  <tr>
+    <th>Flightline</th>
+    <th>Segnum</th>
+    <th>Segmentinfo</th>
+  </tr>
+
+<% @segments.each do |segment| %>
+  <tr>
+    <td><%=h segment.flightline_id %></td>
+    <td><%=h segment.segnum %></td>
+    <td><%=h segment.segmentinfo %></td>
+    <td><%= link_to 'Show', segment %></td>
+    <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
+    <td><%= link_to 'Destroy', segment, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New segment', new_segment_path %>

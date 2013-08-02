@@ -1,0 +1,18 @@
+<p>
+  <b>Flightline:</b>
+  <%=h @segment.flightline_id %>
+</p>
+
+<p>
+  <b>Segnum:</b>
+  <%=h @segment.segnum %>
+</p>
+
+<p>
+  <b>Segmentinfo:</b>
+  <%=h @segment.segmentinfo %>
+</p>
+
+
+<%= link_to 'Edit', edit_segment_path(@segment) %> |
+<%= link_to 'Back', segments_path %>

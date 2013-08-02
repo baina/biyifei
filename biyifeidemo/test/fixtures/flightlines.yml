@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  prikey_id: 1
+  fltcombin: MyString
+  traveltype: 1
+
+two:
+  prikey_id: 1
+  fltcombin: MyString
+  traveltype: 1

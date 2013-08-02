@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @prikey.name %>
+</p>
+
+<p>
+  <b>Hashid date:</b>
+  <%=h @prikey.hashid_date %>
+</p>
+
+<p>
+  <b>Hashvalue flts:</b>
+  <%=h @prikey.hashvalue_flts %>
+</p>
+
+
+<%= link_to 'Edit', edit_prikey_path(@prikey) %> |
+<%= link_to 'Back', prikeys_path %>

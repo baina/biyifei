@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  flightline_id: 1
+  hashid_date: 1
+  hashvalue_price: MyText
+
+two:
+  flightline_id: 1
+  hashid_date: 1
+  hashvalue_price: MyText

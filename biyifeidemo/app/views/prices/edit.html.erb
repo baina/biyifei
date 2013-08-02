@@ -1,0 +1,24 @@
+<h1>Editing price</h1>
+
+<% form_for(@price) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :flightline_id %><br />
+    <%= f.text_field :flightline_id %>
+  </p>
+  <p>
+    <%= f.label :hashid_date %><br />
+    <%= f.text_field :hashid_date %>
+  </p>
+  <p>
+    <%= f.label :hashvalue_price %><br />
+    <%= f.text_area :hashvalue_price %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @price %> |
+<%= link_to 'Back', prices_path %>

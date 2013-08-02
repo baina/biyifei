@@ -1,0 +1,24 @@
+<h1>Listing flightlines</h1>
+
+<table>
+  <tr>
+    <th>Prikey</th>
+    <th>Fltcombin</th>
+    <th>Traveltype</th>
+  </tr>
+
+<% @flightlines.each do |flightline| %>
+  <tr>
+    <td><%=h flightline.prikey_id %></td>
+    <td><%=h flightline.fltcombin %></td>
+    <td><%=h flightline.traveltype %></td>
+    <td><%= link_to 'Show', flightline %></td>
+    <td><%= link_to 'Edit', edit_flightline_path(flightline) %></td>
+    <td><%= link_to 'Destroy', flightline, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New flightline', new_flightline_path %>

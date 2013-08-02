@@ -1,0 +1,24 @@
+<h1>Listing prikeys</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Hashid date</th>
+    <th>Hashvalue flts</th>
+  </tr>
+
+<% @prikeys.each do |prikey| %>
+  <tr>
+    <td><%=h prikey.name %></td>
+    <td><%=h prikey.hashid_date %></td>
+    <td><%=h prikey.hashvalue_flts %></td>
+    <td><%= link_to 'Show', prikey %></td>
+    <td><%= link_to 'Edit', edit_prikey_path(prikey) %></td>
+    <td><%= link_to 'Destroy', prikey, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New prikey', new_prikey_path %>

@@ -1,0 +1,35 @@
+rails --database=mysql biyifei
+
+ruby script/generate scaffold querykey name:string carriercode:string
+
+ruby script/generate scaffold prikey querykey_id:integer name:string hashid_date:integer hashvalue_flts:string
+
+ruby script/generate scaffold flightline prikey_id:integer fltcombin:string traveltype:boolean
+
+ruby script/generate scaffold segment flightline_id:integer segnum:integer segmentinfo:text
+
+ruby script/generate scaffold price flightline_id:integer hashid_date:integer hashvalue_bunk:text hashvalue_price:text
+
+rake db:migrate
+
+
+
+# 这个耽误不少时间integer(8)
+./db/migrate//20130621142341_create_prikeys.rb:5: syntax error, unexpected ':',expecting kEND
+      t.integer(8) :hashid_date
+	  
+	  
+	  
+	  
+rails --database=mysql biyifeidemo
+
+
+ruby script/generate scaffold prikey name:string hashid_date:integer hashvalue_flts:text
+
+ruby script/generate scaffold flightline prikey_id:integer fltcombin:string traveltype:integer
+
+ruby script/generate scaffold segment flightline_id:integer segnum:integer segmentinfo:text
+
+ruby script/generate scaffold price flightline_id:integer hashid_date:integer hashvalue_price:text
+
+rake db:migrate

@@ -1,0 +1,1687 @@
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (16.4ms)[0m   [0mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSHOW KEYS FROM `schema_migrations`[0m
+  [4;35;1mSQL (13.7ms)[0m   [0mCREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Migrating to CreatePrikeys (20130622123903)
+  [4;36;1mSQL (18.9ms)[0m   [0;1mCREATE TABLE `prikeys` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) NOT NULL, `hashid_date` int(11), `hashvalue_flts` text, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW KEYS FROM `prikeys`[0m
+  [4;36;1mSQL (8.2ms)[0m   [0;1mCREATE INDEX `index_prikeys_on_name` ON `prikeys` (`name`)[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW KEYS FROM `prikeys`[0m
+  [4;36;1mSQL (10.7ms)[0m   [0;1mCREATE INDEX `index_prikeys_on_hashid_date` ON `prikeys` (`hashid_date`)[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('20130622123903')[0m
+Migrating to CreateFlightlines (20130622123931)
+  [4;36;1mSQL (8.2ms)[0m   [0;1mCREATE TABLE `flightlines` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `prikey_id` int(11) NOT NULL, `fltcombin` varchar(255) NOT NULL, `traveltype` int(11) NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (9.2ms)[0m   [0malter table flightlines
+ add constraint fk_flightline_prikeys
+ foreign key (prikey_id) references prikeys(id)[0m
+  [4;36;1mSQL (0.7ms)[0m   [0;1mSHOW KEYS FROM `flightlines`[0m
+  [4;35;1mSQL (19.5ms)[0m   [0mCREATE INDEX `index_flightlines_on_prikey_id` ON `flightlines` (`prikey_id`)[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20130622123931')[0m
+Migrating to CreateSegments (20130622123941)
+  [4;35;1mSQL (12.3ms)[0m   [0mCREATE TABLE `segments` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `flightline_id` int(11) NOT NULL, `segnum` int(11) NOT NULL, `segmentinfo` text NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (19.7ms)[0m   [0;1malter table segments
+ add constraint fk_segment_flightlines
+ foreign key (flightline_id) references flightlines(id)[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW KEYS FROM `segments`[0m
+  [4;36;1mSQL (9.2ms)[0m   [0;1mCREATE INDEX `index_segments_on_flightline_id` ON `segments` (`flightline_id`)[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW KEYS FROM `segments`[0m
+  [4;36;1mSQL (8.9ms)[0m   [0;1mCREATE INDEX `index_segments_on_segnum` ON `segments` (`segnum`)[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('20130622123941')[0m
+Migrating to CreatePrices (20130622123947)
+  [4;36;1mSQL (8.1ms)[0m   [0;1mCREATE TABLE `prices` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `flightline_id` int(11) NOT NULL, `hashid_date` int(11) NOT NULL, `hashvalue_price` text, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (10.4ms)[0m   [0malter table prices
+ add constraint fk_price_flightlines
+ foreign key (flightline_id) references flightlines(id)[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mSHOW KEYS FROM `prices`[0m
+  [4;35;1mSQL (16.7ms)[0m   [0mCREATE INDEX `index_prices_on_flightline_id` ON `prices` (`flightline_id`)[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mSHOW KEYS FROM `prices`[0m
+  [4;35;1mSQL (15.0ms)[0m   [0mCREATE INDEX `index_prices_on_hashid_date` ON `prices` (`hashid_date`)[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20130622123947')[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mSQL (0.5ms)[0m   [0mdescribe `flightlines`[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSHOW KEYS FROM `flightlines`[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+  [4;36;1mSQL (0.5ms)[0m   [0;1mdescribe `prices`[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSHOW KEYS FROM `prices`[0m
+  [4;36;1mSQL (0.7ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mSQL (0.5ms)[0m   [0mdescribe `prikeys`[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSHOW KEYS FROM `prikeys`[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1mdescribe `segments`[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSHOW KEYS FROM `segments`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Rails::InfoController#properties (for 127.0.0.1 at 2013-06-22 21:33:43) [GET]
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Completed in 9ms (View: 1, DB: 1) | 200 OK [http://localhost/rails/info/properties]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:33:49) [GET]
+  [4;36;1mPrikey Load (0.3ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+Completed in 19ms (View: 14, DB: 1) | 200 OK [http://localhost/prikeys]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#new (for 127.0.0.1 at 2013-06-22 21:33:51) [GET]
+  [4;35;1mPrikey Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Rendering template within layouts/prikeys
+Rendering prikeys/new
+Completed in 23ms (View: 17, DB: 2) | 200 OK [http://localhost/prikeys/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#create (for 127.0.0.1 at 2013-06-22 21:34:01) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "prikey"=>{"hashvalue_flts"=>"{\r\n    \"sum\": 9,\r\n    \"f_num\": 3,\r\n    \"flts\": [\r\n        {\r\n            \"airline\": \"CZ\",\r\n            \"f_id\": [\r\n                1,\r\n                2,\r\n                3\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"KE\",\r\n            \"f_id\": [\r\n                1,\r\n                4,\r\n                5,\r\n                6\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"MU\",\r\n            \"f_id\": [\r\n                7,\r\n                8,\r\n                9\r\n            ]\r\n        }\r\n    ]\r\n}", "name"=>"can/lax/ow/", "hashid_date"=>"20130901"}, "commit"=>"Create"}
+  [4;36;1mPrikey Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mBEGIN[0m
+  [4;36;1mPrikey Create (0.3ms)[0m   [0;1mINSERT INTO `prikeys` (`updated_at`, `hashvalue_flts`, `created_at`, `name`, `hashid_date`) VALUES('2013-06-22 13:34:01', '{\r\n \"sum\": 9,\r\n \"f_num\": 3,\r\n \"flts\": [\r\n {\r\n \"airline\": \"CZ\",\r\n \"f_id\": [\r\n 1,\r\n 2,\r\n 3\r\n ]\r\n },\r\n {\r\n \"airline\": \"KE\",\r\n \"f_id\": [\r\n 1,\r\n 4,\r\n 5,\r\n 6\r\n ]\r\n },\r\n {\r\n \"airline\": \"MU\",\r\n \"f_id\": [\r\n 7,\r\n 8,\r\n 9\r\n ]\r\n }\r\n ]\r\n}', '2013-06-22 13:34:01', 'can/lax/ow/', 20130901)[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/prikeys/1
+Completed in 9ms (DB: 2) | 302 Found [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:34:01) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.3ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 12ms (View: 7, DB: 1) | 200 OK [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:34:05) [GET]
+  [4;36;1mPrikey Load (0.4ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (3.2ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 13ms (View: 6, DB: 4) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:34:08) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (2.5ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.2ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 10ms (View: 3, DB: 3) | 200 OK [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:34:38) [GET]
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+Completed in 54ms (View: 51, DB: 0) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:34:39) [GET]
+  [4;35;1mFlightline Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 12ms (View: 7, DB: 3) | 200 OK [http://localhost/flightlines/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:37:16) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"CZ3339,KE1000/CZ3338", "prikey_id"=>"1"}, "commit"=>"Create"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Create (0.9ms)[0m   [0;1mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(1, '2013-06-22 13:37:16', 'CZ3339,KE1000/CZ3338', 1, '2013-06-22 13:37:16')[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/1
+Completed in 8ms (DB: 2) | 302 Found [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:37:16) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 4, DB: 1) | 200 OK [http://localhost/flightlines/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:37:18) [GET]
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 9ms (View: 4, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:37:39) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mFlightline Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 48ms (View: 44, DB: 1) | 200 OK [http://localhost/flightlines/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:37:46) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"KE1000/CZ3338", "prikey_id"=>"1"}, "id"=>"1", "commit"=>"Update"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Update (0.3ms)[0m   [0mUPDATE `flightlines` SET `fltcombin` = 'KE1000/CZ3338', `updated_at` = '2013-06-22 13:37:46' WHERE `id` = 1[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/1
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/flightlines/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:37:46) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mFlightline Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:37:47) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 9ms (View: 4, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:37:50) [GET]
+  [4;35;1mFlightline Columns (2.3ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 10ms (View: 5, DB: 2) | 200 OK [http://localhost/flightlines/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:38:07) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"CZ3339", "prikey_id"=>"1"}, "commit"=>"Create"}
+  [4;36;1mFlightline Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Create (0.2ms)[0m   [0;1mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(1, '2013-06-22 13:38:07', 'CZ3339', 1, '2013-06-22 13:38:07')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/2
+Completed in 7ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:38:07) [GET]
+  Parameters: {"id"=>"2"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 2) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/2]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:38:08) [GET]
+  [4;36;1mFlightline Load (0.4ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 10ms (View: 5, DB: 2) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:38:21) [GET]
+  [4;36;1mPrikey Load (0.1ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 8ms (View: 4, DB: 1) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#new (for 127.0.0.1 at 2013-06-22 21:38:24) [GET]
+  [4;36;1mPrikey Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+Rendering template within layouts/prikeys
+Rendering prikeys/new
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys/new]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#create (for 127.0.0.1 at 2013-06-22 21:40:17) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "prikey"=>{"hashvalue_flts"=>"{\r\n    \"sum\": 3,\r\n    \"f_num\": 2,\r\n    \"flts\": [\r\n        {\r\n            \"airline\": \"MU\",\r\n            \"f_id\": [\r\n                9,\r\n                10\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"KE\",\r\n            \"f_id\": [\r\n                11\r\n            ]\r\n        }\r\n    ]\r\n}", "name"=>"can/lax/rt/", "hashid_date"=>"20130902"}, "commit"=>"Create"}
+  [4;35;1mPrikey Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mPrikey Create (0.3ms)[0m   [0mINSERT INTO `prikeys` (`updated_at`, `hashvalue_flts`, `created_at`, `name`, `hashid_date`) VALUES('2013-06-22 13:40:17', '{\r\n \"sum\": 3,\r\n \"f_num\": 2,\r\n \"flts\": [\r\n {\r\n \"airline\": \"MU\",\r\n \"f_id\": [\r\n 9,\r\n 10\r\n ]\r\n },\r\n {\r\n \"airline\": \"KE\",\r\n \"f_id\": [\r\n 11\r\n ]\r\n }\r\n ]\r\n}', '2013-06-22 13:40:17', 'can/lax/rt/', 20130902)[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/prikeys/2
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/prikeys]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:40:17) [GET]
+  Parameters: {"id"=>"2"}
+  [4;35;1mPrikey Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prikeys/2]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:40:19) [GET]
+  [4;35;1mPrikey Load (0.4ms)[0m   [0mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;36;1mPrikey Columns (2.5ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:40:33) [GET]
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 47ms (View: 41, DB: 1) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:40:36) [GET]
+  [4;35;1mFlightline Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 10ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:41:27) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"CZ2339CZ1220", "prikey_id"=>"1"}, "commit"=>"Create"}
+  [4;36;1mFlightline Columns (0.6ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Create (0.4ms)[0m   [0;1mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(1, '2013-06-22 13:41:27', 'CZ2339CZ1220', 1, '2013-06-22 13:41:27')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/3
+Completed in 6ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:41:27) [GET]
+  Parameters: {"id"=>"3"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 3) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/3]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:41:28) [GET]
+  [4;36;1mFlightline Load (0.3ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 13ms (View: 8, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:41:38) [GET]
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 10ms (View: 6, DB: 1) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:41:48) [GET]
+  [4;36;1mFlightline Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 10ms (View: 5, DB: 2) | 200 OK [http://localhost/flightlines/new]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:43:59) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"KE5000", "prikey_id"=>"1"}, "commit"=>"Create"}
+  [4;35;1mFlightline Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Create (0.2ms)[0m   [0mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(1, '2013-06-22 13:43:59', 'KE5000', 1, '2013-06-22 13:43:59')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/4
+Completed in 6ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:43:59) [GET]
+  Parameters: {"id"=>"4"}
+  [4;35;1mFlightline Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 4) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/4]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:44:00) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 13ms (View: 8, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:44:14) [GET]
+  [4;35;1mFlightline Columns (2.2ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 11ms (View: 5, DB: 2) | 200 OK [http://localhost/flightlines/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:44:26) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"KE5000", "prikey_id"=>"1"}, "commit"=>"Create"}
+  [4;36;1mFlightline Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Create (0.3ms)[0m   [0;1mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(1, '2013-06-22 13:44:26', 'KE5000', 1, '2013-06-22 13:44:26')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/5
+Completed in 6ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:44:26) [GET]
+  Parameters: {"id"=>"5"}
+  [4;36;1mFlightline Columns (0.6ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/5]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:44:27) [GET]
+  [4;36;1mFlightline Load (0.3ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (2.3ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 48ms (View: 9, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:44:30) [GET]
+  Parameters: {"id"=>"5"}
+  [4;36;1mFlightline Columns (2.4ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/5/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:45:20) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"KE3000HU8001/KE3081", "prikey_id"=>"1"}, "id"=>"5", "commit"=>"Update"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Update (0.3ms)[0m   [0mUPDATE `flightlines` SET `fltcombin` = 'KE3000HU8001/KE3081', `updated_at` = '2013-06-22 13:45:20' WHERE `id` = 5[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/5
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:45:20) [GET]
+  Parameters: {"id"=>"5"}
+  [4;35;1mFlightline Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:45:33) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.9ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 15ms (View: 9, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:45:55) [GET]
+  Parameters: {"id"=>"3"}
+  [4;35;1mFlightline Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 3) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 11ms (View: 6, DB: 3) | 200 OK [http://localhost/flightlines/3/edit]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:45:59) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"CZ2339-CZ1220", "prikey_id"=>"1"}, "id"=>"3", "commit"=>"Update"}
+  [4;35;1mFlightline Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 3) [0m
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Update (0.3ms)[0m   [0;1mUPDATE `flightlines` SET `fltcombin` = 'CZ2339-CZ1220', `updated_at` = '2013-06-22 13:45:59' WHERE `id` = 3[0m
+  [4;35;1mSQL (0.5ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/3
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/flightlines/3]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:45:59) [GET]
+  Parameters: {"id"=>"3"}
+  [4;36;1mFlightline Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 3) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/3]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:46:01) [GET]
+  [4;36;1mFlightline Load (0.4ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (2.5ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 15ms (View: 9, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:46:03) [GET]
+  Parameters: {"id"=>"5"}
+  [4;36;1mFlightline Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/5/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:46:08) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"KE3000-HU8001/KE3081", "prikey_id"=>"1"}, "id"=>"5", "commit"=>"Update"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Update (0.3ms)[0m   [0mUPDATE `flightlines` SET `fltcombin` = 'KE3000-HU8001/KE3081', `updated_at` = '2013-06-22 13:46:08' WHERE `id` = 5[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/5
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:46:08) [GET]
+  Parameters: {"id"=>"5"}
+  [4;35;1mFlightline Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:46:10) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 54ms (View: 49, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:46:23) [GET]
+  Parameters: {"id"=>"5"}
+  [4;35;1mFlightline Columns (2.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:46:25) [GET]
+  [4;35;1mFlightline Columns (2.3ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 10ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-22 21:46:47) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.2ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/edit
+Completed in 13ms (View: 7, DB: 3) | 200 OK [http://localhost/prikeys/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#update (for 127.0.0.1 at 2013-06-22 21:46:58) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "prikey"=>{"hashvalue_flts"=>"{\r\n    \"sum\": 9,\r\n    \"f_num\": 3,\r\n    \"flts\": [\r\n        {\r\n            \"airline\": \"CZ\",\r\n            \"f_id\": [\r\n                1,\r\n                2,\r\n                3\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"KE\",\r\n            \"f_id\": [\r\n                1,\r\n                4,\r\n                5\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"MU\",\r\n            \"f_id\": [\r\n                7,\r\n                8,\r\n                9\r\n            ]\r\n        }\r\n    ]\r\n}", "name"=>"can/lax/ow/", "hashid_date"=>"20130901"}, "id"=>"1", "commit"=>"Update"}
+  [4;36;1mPrikey Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.1ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mPrikey Update (0.4ms)[0m   [0mUPDATE `prikeys` SET `hashvalue_flts` = '{\r\n \"sum\": 9,\r\n \"f_num\": 3,\r\n \"flts\": [\r\n {\r\n \"airline\": \"CZ\",\r\n \"f_id\": [\r\n 1,\r\n 2,\r\n 3\r\n ]\r\n },\r\n {\r\n \"airline\": \"KE\",\r\n \"f_id\": [\r\n 1,\r\n 4,\r\n 5\r\n ]\r\n },\r\n {\r\n \"airline\": \"MU\",\r\n \"f_id\": [\r\n 7,\r\n 8,\r\n 9\r\n ]\r\n }\r\n ]\r\n}', `updated_at` = '2013-06-22 13:46:58' WHERE `id` = 1[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/prikeys/1
+Completed in 8ms (DB: 2) | 302 Found [http://localhost/prikeys/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:46:58) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mPrikey Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prikeys/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:47:02) [GET]
+  [4;35;1mPrikey Load (0.3ms)[0m   [0mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;36;1mPrikey Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+Completed in 10ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-22 21:47:12) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mPrikey Columns (2.9ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.1ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/edit
+Completed in 12ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys/1/edit]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#update (for 127.0.0.1 at 2013-06-22 21:47:44) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "prikey"=>{"hashvalue_flts"=>"{\r\n    \"sum\": 6,\r\n    \"f_num\": 3,\r\n    \"flts\": [\r\n        {\r\n            \"airline\": \"CZ\",\r\n            \"f_id\": [\r\n                1,\r\n                2,\r\n                3\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"KE\",\r\n            \"f_id\": [\r\n                1,\r\n                4,\r\n                5\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"MU\",\r\n            \"f_id\": [\r\n                6\r\n            ]\r\n        }\r\n    ]\r\n}", "name"=>"can/lax/ow/", "hashid_date"=>"20130901"}, "id"=>"1", "commit"=>"Update"}
+  [4;35;1mPrikey Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.1ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mPrikey Update (0.3ms)[0m   [0;1mUPDATE `prikeys` SET `hashvalue_flts` = '{\r\n \"sum\": 6,\r\n \"f_num\": 3,\r\n \"flts\": [\r\n {\r\n \"airline\": \"CZ\",\r\n \"f_id\": [\r\n 1,\r\n 2,\r\n 3\r\n ]\r\n },\r\n {\r\n \"airline\": \"KE\",\r\n \"f_id\": [\r\n 1,\r\n 4,\r\n 5\r\n ]\r\n },\r\n {\r\n \"airline\": \"MU\",\r\n \"f_id\": [\r\n 6\r\n ]\r\n }\r\n ]\r\n}', `updated_at` = '2013-06-22 13:47:44' WHERE `id` = 1[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/prikeys/1
+Completed in 8ms (DB: 2) | 302 Found [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:47:44) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (0.6ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.2ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:47:47) [GET]
+  [4;36;1mPrikey Load (0.3ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (2.3ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 12ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-22 21:48:00) [GET]
+  Parameters: {"id"=>"2"}
+  [4;36;1mPrikey Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.3ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys/2/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#update (for 127.0.0.1 at 2013-06-22 21:48:11) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "prikey"=>{"hashvalue_flts"=>"{\r\n    \"sum\": 3,\r\n    \"f_num\": 2,\r\n    \"flts\": [\r\n        {\r\n            \"airline\": \"MU\",\r\n            \"f_id\": [\r\n                7,\r\n                8\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"KE\",\r\n            \"f_id\": [\r\n                9\r\n            ]\r\n        }\r\n    ]\r\n}", "name"=>"can/lax/rt/", "hashid_date"=>"20130902"}, "id"=>"2", "commit"=>"Update"}
+  [4;36;1mPrikey Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.1ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mPrikey Update (0.3ms)[0m   [0mUPDATE `prikeys` SET `hashvalue_flts` = '{\r\n \"sum\": 3,\r\n \"f_num\": 2,\r\n \"flts\": [\r\n {\r\n \"airline\": \"MU\",\r\n \"f_id\": [\r\n 7,\r\n 8\r\n ]\r\n },\r\n {\r\n \"airline\": \"KE\",\r\n \"f_id\": [\r\n 9\r\n ]\r\n }\r\n ]\r\n}', `updated_at` = '2013-06-22 13:48:11' WHERE `id` = 2[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/prikeys/2
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/prikeys/2]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:48:11) [GET]
+  Parameters: {"id"=>"2"}
+  [4;35;1mPrikey Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prikeys/2]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:48:13) [GET]
+  [4;35;1mPrikey Load (0.3ms)[0m   [0mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;36;1mPrikey Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+Completed in 10ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:48:37) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"MU5107", "prikey_id"=>"1"}, "commit"=>"Create"}
+  [4;35;1mFlightline Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Create (0.2ms)[0m   [0mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(1, '2013-06-22 13:48:37', 'MU5107', 1, '2013-06-22 13:48:37')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/6
+Completed in 6ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:48:37) [GET]
+  Parameters: {"id"=>"6"}
+  [4;35;1mFlightline Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 6) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/6]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:48:38) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 17ms (View: 12, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:48:42) [GET]
+  Parameters: {"id"=>"6"}
+  [4;35;1mFlightline Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.1ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 6) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/6]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:49:02) [GET]
+  [4;35;1mFlightline Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 45ms (View: 40, DB: 2) | 200 OK [http://localhost/flightlines/new]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:50:00) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"2", "fltcombin"=>"MU7001,KE1007/MU7330", "prikey_id"=>"2"}, "commit"=>"Create"}
+  [4;36;1mFlightline Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Create (0.2ms)[0m   [0;1mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(2, '2013-06-22 13:50:00', 'MU7001,KE1007/MU7330', 2, '2013-06-22 13:50:00')[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/7
+Completed in 7ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:50:00) [GET]
+  Parameters: {"id"=>"7"}
+  [4;36;1mFlightline Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/7]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:50:01) [GET]
+  [4;36;1mFlightline Load (0.3ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 17ms (View: 12, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:50:57) [GET]
+  Parameters: {"id"=>"7"}
+  [4;36;1mFlightline Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/7]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#new (for 127.0.0.1 at 2013-06-22 21:51:01) [GET]
+  [4;36;1mFlightline Columns (2.5ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Rendering template within layouts/flightlines
+Rendering flightlines/new
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/new]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#create (for 127.0.0.1 at 2013-06-22 21:52:47) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"2", "fltcombin"=>"MU7002-MU7008,KE7782/MU6002-MU6008", "prikey_id"=>"2"}, "commit"=>"Create"}
+  [4;35;1mFlightline Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Create (0.2ms)[0m   [0mINSERT INTO `flightlines` (`traveltype`, `updated_at`, `fltcombin`, `prikey_id`, `created_at`) VALUES(2, '2013-06-22 13:52:47', 'MU7002-MU7008,KE7782/MU6002-MU6008', 2, '2013-06-22 13:52:47')[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/8
+Completed in 6ms (DB: 1) | 302 Found [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:52:47) [GET]
+  Parameters: {"id"=>"8"}
+  [4;35;1mFlightline Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 8) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/8]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:52:49) [GET]
+  [4;35;1mFlightline Load (0.4ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 21ms (View: 16, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-22 21:53:45) [GET]
+  Parameters: {"id"=>"2"}
+  [4;35;1mPrikey Columns (2.6ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys/2/edit]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#update (for 127.0.0.1 at 2013-06-22 21:53:58) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "prikey"=>{"hashvalue_flts"=>"{\r\n    \"sum\": 2,\r\n    \"f_num\": 2,\r\n    \"flts\": [\r\n        {\r\n            \"airline\": \"MU\",\r\n            \"f_id\": [\r\n                7,\r\n                8\r\n            ]\r\n        },\r\n        {\r\n            \"airline\": \"KE\",\r\n            \"f_id\": [\r\n                7\r\n            ]\r\n        }\r\n    ]\r\n}", "name"=>"can/lax/rt/", "hashid_date"=>"20130902"}, "id"=>"2", "commit"=>"Update"}
+  [4;35;1mPrikey Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.1ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mPrikey Update (0.3ms)[0m   [0;1mUPDATE `prikeys` SET `hashvalue_flts` = '{\r\n \"sum\": 2,\r\n \"f_num\": 2,\r\n \"flts\": [\r\n {\r\n \"airline\": \"MU\",\r\n \"f_id\": [\r\n 7,\r\n 8\r\n ]\r\n },\r\n {\r\n \"airline\": \"KE\",\r\n \"f_id\": [\r\n 7\r\n ]\r\n }\r\n ]\r\n}', `updated_at` = '2013-06-22 13:53:58' WHERE `id` = 2[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/prikeys/2
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/prikeys/2]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 21:53:58) [GET]
+  Parameters: {"id"=>"2"}
+  [4;36;1mPrikey Columns (0.6ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.2ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 2) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prikeys/2]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:54:01) [GET]
+  [4;36;1mPrikey Load (0.3ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:54:07) [GET]
+  Parameters: {"id"=>"8"}
+  [4;36;1mFlightline Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 8) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/8]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:54:11) [GET]
+  Parameters: {"id"=>"7"}
+  [4;36;1mFlightline Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/7]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 21:54:40) [GET]
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (2.9ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 12ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:55:20) [GET]
+  Parameters: {"id"=>"7"}
+  [4;36;1mFlightline Columns (2.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/7/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:55:43) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"2", "fltcombin"=>"MU7001/KE3001,KE1007/MU7330", "prikey_id"=>"2"}, "id"=>"7", "commit"=>"Update"}
+  [4;36;1mFlightline Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Update (0.3ms)[0m   [0mUPDATE `flightlines` SET `fltcombin` = 'MU7001/KE3001,KE1007/MU7330', `updated_at` = '2013-06-22 13:55:43' WHERE `id` = 7[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/7
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/flightlines/7]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:55:43) [GET]
+  Parameters: {"id"=>"7"}
+  [4;35;1mFlightline Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/7]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:55:44) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.1ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 54ms (View: 13, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:59:25) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mFlightline Columns (2.2ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/flightlines/1/edit]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:59:35) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"CZ3338/KE1000", "prikey_id"=>"1"}, "id"=>"1", "commit"=>"Update"}
+  [4;35;1mFlightline Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.1ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mFlightline Update (0.3ms)[0m   [0;1mUPDATE `flightlines` SET `fltcombin` = 'CZ3338/KE1000', `updated_at` = '2013-06-22 13:59:35' WHERE `id` = 1[0m
+  [4;35;1mSQL (0.5ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/1
+Completed in 8ms (DB: 2) | 302 Found [http://localhost/flightlines/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:59:35) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mFlightline Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:59:37) [GET]
+  [4;36;1mFlightline Load (0.4ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 22ms (View: 15, DB: 4) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#edit (for 127.0.0.1 at 2013-06-22 21:59:43) [GET]
+  Parameters: {"id"=>"5"}
+  [4;36;1mFlightline Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/edit
+Completed in 11ms (View: 6, DB: 3) | 200 OK [http://localhost/flightlines/5/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#update (for 127.0.0.1 at 2013-06-22 21:59:54) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "flightline"=>{"traveltype"=>"1", "fltcombin"=>"KE3000-KE3081/HU8001", "prikey_id"=>"1"}, "id"=>"5", "commit"=>"Update"}
+  [4;36;1mFlightline Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.1ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mFlightline Update (0.3ms)[0m   [0mUPDATE `flightlines` SET `fltcombin` = 'KE3000-KE3081/HU8001', `updated_at` = '2013-06-22 13:59:54' WHERE `id` = 5[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/flightlines/5
+Completed in 10ms (DB: 2) | 302 Found [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 21:59:54) [GET]
+  Parameters: {"id"=>"5"}
+  [4;35;1mFlightline Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.2ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 5) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/flightlines/5]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-22 21:59:55) [GET]
+  [4;35;1mFlightline Load (0.3ms)[0m   [0mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;36;1mFlightline Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+Completed in 18ms (View: 13, DB: 2) | 200 OK [http://localhost/flightlines]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 22:00:09) [GET]
+  Parameters: {"id"=>"6"}
+  [4;35;1mFlightline Columns (3.1ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.3ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 6) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 9ms (View: 2, DB: 4) | 200 OK [http://localhost/flightlines/6]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 22:00:42) [GET]
+  Parameters: {"id"=>"7"}
+  [4;35;1mFlightline Columns (2.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.3ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 7) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 9ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/7]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-22 22:03:14) [GET]
+  [4;35;1mSegment Load (0.3ms)[0m   [0mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+Completed in 11ms (View: 8, DB: 0) | 200 OK [http://localhost/segments]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#new (for 127.0.0.1 at 2013-06-22 22:03:16) [GET]
+  [4;36;1mSegment Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+Rendering template within layouts/segments
+Rendering segments/new
+Completed in 13ms (View: 7, DB: 2) | 200 OK [http://localhost/segments/new]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#create (for 127.0.0.1 at 2013-06-22 22:13:06) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "segment"=>{"segnum"=>"1", "flightline_id"=>"1", "segmentinfo"=>"[\r\n    {\r\n        \"airline\": \"CZ3338/KE1000\",\r\n        \"arriTerm\": \"T2\",\r\n        \"arriTime\": \"1000\",\r\n        \"arriveDate\": \"{hashid_date+1} 10:00:00\",\r\n        \"arriveTimeModify\": null,\r\n        \"asr\": \"true\",\r\n        \"depDate\": \"{hashid_date} 07:50:00\",\r\n        \"depTerm\": \"--\",\r\n        \"depTime\": \"0750\",\r\n        \"deptimemodify\": null,\r\n        \"dstcity\": \"LAX\",\r\n        \"etkt\": \"true\",\r\n        \"link\": \"DS#\",\r\n        \"meal\": \"S\",\r\n        \"orgcity\": \"CAN\",\r\n        \"planestyle\": \"73G\",\r\n        \"selectedClass\": \"$\",\r\n        \"stopNumber\": \"0\"\r\n    }\r\n]"}, "commit"=>"Create"}
+  [4;35;1mSegment Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mSegment Create (0.2ms)[0m   [0mINSERT INTO `segments` (`segnum`, `updated_at`, `flightline_id`, `created_at`, `segmentinfo`) VALUES(1, '2013-06-22 14:13:06', 1, '2013-06-22 14:13:06', '[\r\n {\r\n \"airline\": \"CZ3338/KE1000\",\r\n \"arriTerm\": \"T2\",\r\n \"arriTime\": \"1000\",\r\n \"arriveDate\": \"{hashid_date+1} 10:00:00\",\r\n \"arriveTimeModify\": null,\r\n \"asr\": \"true\",\r\n \"depDate\": \"{hashid_date} 07:50:00\",\r\n \"depTerm\": \"--\",\r\n \"depTime\": \"0750\",\r\n \"deptimemodify\": null,\r\n \"dstcity\": \"LAX\",\r\n \"etkt\": \"true\",\r\n \"link\": \"DS#\",\r\n \"meal\": \"S\",\r\n \"orgcity\": \"CAN\",\r\n \"planestyle\": \"73G\",\r\n \"selectedClass\": \"$\",\r\n \"stopNumber\": \"0\"\r\n }\r\n]')[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/segments/1
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/segments]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#show (for 127.0.0.1 at 2013-06-22 22:13:07) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mSegment Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+  [4;36;1mSegment Load (0.2ms)[0m   [0;1mSELECT * FROM `segments` WHERE (`segments`.`id` = 1) [0m
+Rendering template within layouts/segments
+Rendering segments/show
+Completed in 8ms (View: 4, DB: 1) | 200 OK [http://localhost/segments/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-22 22:13:09) [GET]
+  [4;35;1mSegment Load (0.2ms)[0m   [0mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;36;1mSegment Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+Completed in 9ms (View: 4, DB: 3) | 200 OK [http://localhost/segments]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#show (for 127.0.0.1 at 2013-06-22 22:13:11) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mSegment Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+  [4;36;1mSegment Load (0.3ms)[0m   [0;1mSELECT * FROM `segments` WHERE (`segments`.`id` = 1) [0m
+Rendering template within layouts/segments
+Rendering segments/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/segments/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-22 22:13:13) [GET]
+  [4;35;1mSegment Load (0.2ms)[0m   [0mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;36;1mSegment Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+Completed in 11ms (View: 4, DB: 3) | 200 OK [http://localhost/segments]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#edit (for 127.0.0.1 at 2013-06-22 22:13:14) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mSegment Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+  [4;36;1mSegment Load (0.1ms)[0m   [0;1mSELECT * FROM `segments` WHERE (`segments`.`id` = 1) [0m
+Rendering template within layouts/segments
+Rendering segments/edit
+Completed in 13ms (View: 8, DB: 3) | 200 OK [http://localhost/segments/1/edit]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-22 22:13:21) [GET]
+  [4;35;1mSegment Load (0.1ms)[0m   [0mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;36;1mSegment Columns (2.4ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+Completed in 10ms (View: 4, DB: 3) | 200 OK [http://localhost/segments]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#index (for 127.0.0.1 at 2013-06-22 22:14:12) [GET]
+  [4;35;1mPrice Load (0.2ms)[0m   [0mSELECT * FROM `prices` [0m
+Rendering template within layouts/prices
+Rendering prices/index
+Completed in 10ms (View: 7, DB: 0) | 200 OK [http://localhost/prices]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#new (for 127.0.0.1 at 2013-06-22 22:14:14) [GET]
+  [4;36;1mPrice Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+Rendering template within layouts/prices
+Rendering prices/new
+Completed in 14ms (View: 8, DB: 3) | 200 OK [http://localhost/prices/new]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 22:14:25) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mFlightline Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+  [4;36;1mFlightline Load (0.3ms)[0m   [0;1mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 1) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-22 22:14:42) [GET]
+  [4;35;1mPrikey Load (0.2ms)[0m   [0mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;36;1mPrikey Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+Completed in 10ms (View: 5, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-22 22:14:45) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mPrikey Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/prikeys/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#create (for 127.0.0.1 at 2013-06-22 22:25:43) [POST]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "commit"=>"Create", "price"=>{"hashvalue_price"=>"{\r\n    \"prices\": {\r\n        \"cangwei_index\": [\r\n            \"Q\",\r\n            \"Y\"\r\n        ],\r\n        \"price_data\": [\r\n            {\r\n                \"ctrip\": \"1000\",\r\n                \"itour\": \"1500\"\r\n            },\r\n            {\r\n                \"itour\": \"1500\"\r\n            }\r\n        ]\r\n    },\r\n    \"bunks\": {\r\n        \"cangwei_data\": [\r\n            \"8\",\r\n            \"S\",\r\n            \"A\",\r\n            \"5\",\r\n            \"5\",\r\n            \"1\",\r\n            \"S\",\r\n            \"S\",\r\n            \"S\",\r\n            \"S\",\r\n            \"A\",\r\n            \"S\",\r\n            \"S\",\r\n            \"S\",\r\n            \"S\"\r\n        ],\r\n        \"cangwei_data_sort\": null,\r\n        \"cangwei_index\": [\r\n            \"F\",\r\n            \"A\",\r\n            \"Y\",\r\n            \"B\",\r\n            \"M\",\r\n            \"H\",\r\n            \"K\",\r\n            \"L\",\r\n            \"Q\",\r\n            \"G\",\r\n            \"S\",\r\n            \"N\",\r\n            \"V\",\r\n            \"T\",\r\n            \"E\"\r\n        ],\r\n        \"cangwei_index_sort\": null,\r\n        \"cangwei_subclass_data\": [\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            [\r\n                \"5\"\r\n            ],\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            [\r\n                \"S\"\r\n            ],\r\n            null,\r\n            null\r\n        ],\r\n        \"cangwei_subclass_index\": [\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            [\r\n                \"M1\"\r\n            ],\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            null,\r\n            [\r\n                \"V1\"\r\n            ],\r\n            null,\r\n            null\r\n        ]\r\n    }\r\n}", "flightline_id"=>"1", "hashid_date"=>"20130901"}}
+  [4;35;1mPrice Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mPrice Create (0.3ms)[0m   [0mINSERT INTO `prices` (`hashvalue_price`, `updated_at`, `flightline_id`, `created_at`, `hashid_date`) VALUES('{\r\n \"prices\": {\r\n \"cangwei_index\": [\r\n \"Q\",\r\n \"Y\"\r\n ],\r\n \"price_data\": [\r\n {\r\n \"ctrip\": \"1000\",\r\n \"itour\": \"1500\"\r\n },\r\n {\r\n \"itour\": \"1500\"\r\n }\r\n ]\r\n },\r\n \"bunks\": {\r\n \"cangwei_data\": [\r\n \"8\",\r\n \"S\",\r\n \"A\",\r\n \"5\",\r\n \"5\",\r\n \"1\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"A\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"S\"\r\n ],\r\n \"cangwei_data_sort\": null,\r\n \"cangwei_index\": [\r\n \"F\",\r\n \"A\",\r\n \"Y\",\r\n \"B\",\r\n \"M\",\r\n \"H\",\r\n \"K\",\r\n \"L\",\r\n \"Q\",\r\n \"G\",\r\n \"S\",\r\n \"N\",\r\n \"V\",\r\n \"T\",\r\n \"E\"\r\n ],\r\n \"cangwei_index_sort\": null,\r\n \"cangwei_subclass_data\": [\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"5\"\r\n ],\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"S\"\r\n ],\r\n null,\r\n null\r\n ],\r\n \"cangwei_subclass_index\": [\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"M1\"\r\n ],\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"V1\"\r\n ],\r\n null,\r\n null\r\n ]\r\n }\r\n}', '2013-06-22 14:25:43', 1, '2013-06-22 14:25:43', 20130901)[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/prices/1
+Completed in 7ms (DB: 1) | 302 Found [http://localhost/prices]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#show (for 127.0.0.1 at 2013-06-22 22:25:43) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mPrice Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+  [4;36;1mPrice Load (0.2ms)[0m   [0;1mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/show
+Completed in 9ms (View: 4, DB: 1) | 200 OK [http://localhost/prices/1]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#edit (for 127.0.0.1 at 2013-06-22 22:26:47) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mPrice Columns (2.7ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+  [4;36;1mPrice Load (0.1ms)[0m   [0;1mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/edit
+Completed in 15ms (View: 9, DB: 3) | 200 OK [http://localhost/prices/1/edit]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#update (for 127.0.0.1 at 2013-06-22 22:28:51) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "id"=>"1", "commit"=>"Update", "price"=>{"hashvalue_price"=>"{\r\n    \"prices\": {\r\n        \"cangwei_index\": [\r\n            \"Q-Q\",\r\n            \"Y-H\"\r\n        ],\r\n        \"price_data\": [\r\n            {\r\n                \"ctrip\": \"1000\",\r\n                \"itour\": \"1500\"\r\n            },\r\n            {\r\n                \"itour\": \"1500\"\r\n            }\r\n        ]\r\n    },\r\n    \"bunks\": [\r\n        {\r\n            \"cangwei_data\": [\r\n                \"8\",\r\n                \"S\",\r\n                \"A\",\r\n                \"5\",\r\n                \"5\",\r\n                \"1\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"A\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\"\r\n            ],\r\n            \"cangwei_data_sort\": null,\r\n            \"cangwei_index\": [\r\n                \"F\",\r\n                \"A\",\r\n                \"Y\",\r\n                \"B\",\r\n                \"M\",\r\n                \"H\",\r\n                \"K\",\r\n                \"L\",\r\n                \"Q\",\r\n                \"G\",\r\n                \"S\",\r\n                \"N\",\r\n                \"V\",\r\n                \"T\",\r\n                \"E\"\r\n            ],\r\n            \"cangwei_index_sort\": null,\r\n            \"cangwei_subclass_data\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"5\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"S\"\r\n                ],\r\n                null,\r\n                null\r\n            ],\r\n            \"cangwei_subclass_index\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"M1\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"V1\"\r\n                ],\r\n                null,\r\n                null\r\n            ]\r\n        },\r\n        {\r\n            \"cangwei_data\": [\r\n                \"8\",\r\n                \"S\",\r\n                \"A\",\r\n                \"5\",\r\n                \"5\",\r\n                \"1\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"A\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\"\r\n            ],\r\n            \"cangwei_data_sort\": null,\r\n            \"cangwei_index\": [\r\n                \"F\",\r\n                \"A\",\r\n                \"Y\",\r\n                \"B\",\r\n                \"M\",\r\n                \"H\",\r\n                \"K\",\r\n                \"L\",\r\n                \"Q\",\r\n                \"G\",\r\n                \"S\",\r\n                \"N\",\r\n                \"V\",\r\n                \"T\",\r\n                \"E\"\r\n            ],\r\n            \"cangwei_index_sort\": null,\r\n            \"cangwei_subclass_data\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"5\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"S\"\r\n                ],\r\n                null,\r\n                null\r\n            ],\r\n            \"cangwei_subclass_index\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"M1\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"V1\"\r\n                ],\r\n                null,\r\n                null\r\n            ]\r\n        }\r\n    ]\r\n}", "flightline_id"=>"1", "hashid_date"=>"20130901"}}
+  [4;35;1mPrice Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+  [4;36;1mPrice Load (0.1ms)[0m   [0;1mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+  [4;35;1mSQL (0.1ms)[0m   [0mBEGIN[0m
+  [4;36;1mPrice Update (0.5ms)[0m   [0;1mUPDATE `prices` SET `hashvalue_price` = '{\r\n \"prices\": {\r\n \"cangwei_index\": [\r\n \"Q-Q\",\r\n \"Y-H\"\r\n ],\r\n \"price_data\": [\r\n {\r\n \"ctrip\": \"1000\",\r\n \"itour\": \"1500\"\r\n },\r\n {\r\n \"itour\": \"1500\"\r\n }\r\n ]\r\n },\r\n \"bunks\": [\r\n {\r\n \"cangwei_data\": [\r\n \"8\",\r\n \"S\",\r\n \"A\",\r\n \"5\",\r\n \"5\",\r\n \"1\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"A\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"S\"\r\n ],\r\n \"cangwei_data_sort\": null,\r\n \"cangwei_index\": [\r\n \"F\",\r\n \"A\",\r\n \"Y\",\r\n \"B\",\r\n \"M\",\r\n \"H\",\r\n \"K\",\r\n \"L\",\r\n \"Q\",\r\n \"G\",\r\n \"S\",\r\n \"N\",\r\n \"V\",\r\n \"T\",\r\n \"E\"\r\n ],\r\n \"cangwei_index_sort\": null,\r\n \"cangwei_subclass_data\": [\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"5\"\r\n ],\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"S\"\r\n ],\r\n null,\r\n null\r\n ],\r\n \"cangwei_subclass_index\": [\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"M1\"\r\n ],\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"V1\"\r\n ],\r\n null,\r\n null\r\n ]\r\n },\r\n {\r\n \"cangwei_data\": [\r\n \"8\",\r\n \"S\",\r\n \"A\",\r\n \"5\",\r\n \"5\",\r\n \"1\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"A\",\r\n \"S\",\r\n \"S\",\r\n \"S\",\r\n \"S\"\r\n ],\r\n \"cangwei_data_sort\": null,\r\n \"cangwei_index\": [\r\n \"F\",\r\n \"A\",\r\n \"Y\",\r\n \"B\",\r\n \"M\",\r\n \"H\",\r\n \"K\",\r\n \"L\",\r\n \"Q\",\r\n \"G\",\r\n \"S\",\r\n \"N\",\r\n \"V\",\r\n \"T\",\r\n \"E\"\r\n ],\r\n \"cangwei_index_sort\": null,\r\n \"cangwei_subclass_data\": [\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"5\"\r\n ],\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"S\"\r\n ],\r\n null,\r\n null\r\n ],\r\n \"cangwei_subclass_index\": [\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"M1\"\r\n ],\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n null,\r\n [\r\n \"V1\"\r\n ],\r\n null,\r\n null\r\n ]\r\n }\r\n ]\r\n}', `updated_at` = '2013-06-22 14:28:51' WHERE `id` = 1[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mCOMMIT[0m
+Redirected to http://localhost:3000/prices/1
+Completed in 42ms (DB: 2) | 302 Found [http://localhost/prices/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#show (for 127.0.0.1 at 2013-06-22 22:28:51) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrice Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+  [4;35;1mPrice Load (0.2ms)[0m   [0mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prices/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#show (for 127.0.0.1 at 2013-06-22 22:29:16) [GET]
+  Parameters: {"id"=>"3"}
+  [4;36;1mFlightline Columns (2.9ms)[0m   [0;1mSHOW FIELDS FROM `flightlines`[0m
+  [4;35;1mFlightline Load (0.2ms)[0m   [0mSELECT * FROM `flightlines` WHERE (`flightlines`.`id` = 3) [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/show
+Completed in 8ms (View: 2, DB: 3) | 200 OK [http://localhost/flightlines/3]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#edit (for 127.0.0.1 at 2013-06-22 22:29:23) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrice Columns (2.4ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+  [4;35;1mPrice Load (0.2ms)[0m   [0mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/edit
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prices/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#update (for 127.0.0.1 at 2013-06-22 22:29:28) [PUT]
+  Parameters: {"authenticity_token"=>"3pe+2+XaEjOK+BILXHmHWsvwd0/z9WR4YVA+bTT4vnQ=", "id"=>"1", "commit"=>"Update", "price"=>{"hashvalue_price"=>"{\r\n    \"prices\": {\r\n        \"cangwei_index\": [\r\n            \"Q-Q\",\r\n            \"Y-H\"\r\n        ],\r\n        \"price_data\": [\r\n            {\r\n                \"ctrip\": \"1000\",\r\n                \"itour\": \"1500\"\r\n            },\r\n            {\r\n                \"itour\": \"1500\"\r\n            }\r\n        ]\r\n    },\r\n    \"bunks\": [\r\n        {\r\n            \"cangwei_data\": [\r\n                \"8\",\r\n                \"S\",\r\n                \"A\",\r\n                \"5\",\r\n                \"5\",\r\n                \"1\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"A\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\"\r\n            ],\r\n            \"cangwei_data_sort\": null,\r\n            \"cangwei_index\": [\r\n                \"F\",\r\n                \"A\",\r\n                \"Y\",\r\n                \"B\",\r\n                \"M\",\r\n                \"H\",\r\n                \"K\",\r\n                \"L\",\r\n                \"Q\",\r\n                \"G\",\r\n                \"S\",\r\n                \"N\",\r\n                \"V\",\r\n                \"T\",\r\n                \"E\"\r\n            ],\r\n            \"cangwei_index_sort\": null,\r\n            \"cangwei_subclass_data\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"5\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"S\"\r\n                ],\r\n                null,\r\n                null\r\n            ],\r\n            \"cangwei_subclass_index\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"M1\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"V1\"\r\n                ],\r\n                null,\r\n                null\r\n            ]\r\n        },\r\n        {\r\n            \"cangwei_data\": [\r\n                \"8\",\r\n                \"S\",\r\n                \"A\",\r\n                \"5\",\r\n                \"5\",\r\n                \"1\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"A\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\",\r\n                \"S\"\r\n            ],\r\n            \"cangwei_data_sort\": null,\r\n            \"cangwei_index\": [\r\n                \"F\",\r\n                \"A\",\r\n                \"Y\",\r\n                \"B\",\r\n                \"M\",\r\n                \"H\",\r\n                \"K\",\r\n                \"L\",\r\n                \"Q\",\r\n                \"G\",\r\n                \"S\",\r\n                \"N\",\r\n                \"V\",\r\n                \"T\",\r\n                \"E\"\r\n            ],\r\n            \"cangwei_index_sort\": null,\r\n            \"cangwei_subclass_data\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"5\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"S\"\r\n                ],\r\n                null,\r\n                null\r\n            ],\r\n            \"cangwei_subclass_index\": [\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"M1\"\r\n                ],\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                null,\r\n                [\r\n                    \"V1\"\r\n                ],\r\n                null,\r\n                null\r\n            ]\r\n        }\r\n    ]\r\n}", "flightline_id"=>"3", "hashid_date"=>"20130901"}}
+  [4;36;1mPrice Columns (0.8ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+  [4;35;1mPrice Load (0.1ms)[0m   [0mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mPrice Update (0.3ms)[0m   [0mUPDATE `prices` SET `updated_at` = '2013-06-22 14:29:28', `flightline_id` = 3 WHERE `id` = 1[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/prices/1
+Completed in 8ms (DB: 2) | 302 Found [http://localhost/prices/1]
+  [4;35;1mSQL (0.4ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#show (for 127.0.0.1 at 2013-06-22 22:29:28) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mPrice Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+  [4;36;1mPrice Load (0.2ms)[0m   [0;1mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/show
+Completed in 6ms (View: 2, DB: 1) | 200 OK [http://localhost/prices/1]
+/!\ FAILSAFE /!\  Sun Jun 23 10:34:10 +0800 2013
+  Status: 500 Internal Server Error
+  Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/mysql_adapter.rb:620:in `real_connect'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/mysql_adapter.rb:620:in `connect'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/mysql_adapter.rb:203:in `initialize'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `new'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `mysql_connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `send'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `new_connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:245:in `checkout_new_connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:188:in `checkout'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `loop'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `checkout'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:183:in `checkout'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:98:in `connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:326:in `retrieve_connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_specification.rb:123:in `retrieve_connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_specification.rb:115:in `connection'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/query_cache.rb:9:in `cache'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/query_cache.rb:28:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/activerecord-2.3.14/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/string_coercion.rb:25:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/head.rb:9:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/methodoverride.rb:24:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/params_parser.rb:15:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/session/cookie_store.rb:99:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/failsafe.rb:26:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/lock.rb:11:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/lock.rb:11:in `synchronize'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/lock.rb:11:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/dispatcher.rb:114:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/reloader.rb:34:in `run'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/actionpack-2.3.14/lib/action_controller/dispatcher.rb:108:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rails-2.3.14/lib/rails/rack/static.rb:31:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/urlmap.rb:47:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/urlmap.rb:41:in `each'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/urlmap.rb:41:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rails-2.3.14/lib/rails/rack/log_tailer.rb:17:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/content_length.rb:13:in `call'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/handler/webrick.rb:48:in `service'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rack-1.1.6/lib/rack/handler/webrick.rb:14:in `run'
+    /Users/rhomobi/.rvm/gems/ruby-1.8.7-p371/gems/rails-2.3.14/lib/commands/server.rb:111
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:55:in `gem_original_require'
+    /Users/rhomobi/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:55:in `require'
+    script/server:3
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-23 10:34:35) [GET]
+  [4;36;1mSegment Load (0.4ms)[0m   [0;1mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;35;1mSegment Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+Completed in 24ms (View: 19, DB: 2) | 200 OK [http://localhost/segments]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#edit (for 127.0.0.1 at 2013-06-23 10:34:38) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mSegment Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+  [4;35;1mSegment Load (0.3ms)[0m   [0mSELECT * FROM `segments` WHERE (`segments`.`id` = 1) [0m
+Rendering template within layouts/segments
+Rendering segments/edit
+Completed in 49ms (View: 9, DB: 3) | 200 OK [http://localhost/segments/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-23 10:34:50) [GET]
+  [4;36;1mSegment Load (0.2ms)[0m   [0;1mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;35;1mSegment Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+Completed in 9ms (View: 4, DB: 2) | 200 OK [http://localhost/segments]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#index (for 127.0.0.1 at 2013-06-23 10:42:17) [GET]
+  [4;36;1mPrice Load (0.3ms)[0m   [0;1mSELECT * FROM `prices` [0m
+Rendering template within layouts/prices
+Rendering prices/index
+  [4;35;1mPrice Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+Completed in 18ms (View: 12, DB: 1) | 200 OK [http://localhost/prices]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#show (for 127.0.0.1 at 2013-06-23 10:42:21) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrice Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+  [4;35;1mPrice Load (0.3ms)[0m   [0mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/show
+Completed in 11ms (View: 5, DB: 3) | 200 OK [http://localhost/prices/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#edit (for 127.0.0.1 at 2013-06-23 10:46:10) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrice Columns (0.7ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+  [4;35;1mPrice Load (0.1ms)[0m   [0mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/edit
+Completed in 12ms (View: 9, DB: 1) | 200 OK [http://localhost/prices/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#index (for 127.0.0.1 at 2013-06-23 10:46:22) [GET]
+  [4;36;1mPrice Load (0.3ms)[0m   [0;1mSELECT * FROM `prices` [0m
+Rendering template within layouts/prices
+Rendering prices/index
+  [4;35;1mPrice Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+Completed in 9ms (View: 4, DB: 3) | 200 OK [http://localhost/prices]
+  [4;36;1mSQL (3.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (1.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Rails::InfoController#properties (for 127.0.0.1 at 2013-06-26 08:13:38) [GET]
+  [4;36;1mSQL (4.4ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (1.8ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Completed in 20ms (View: 2, DB: 11) | 200 OK [http://localhost/rails/info/properties]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-26 08:13:44) [GET]
+  [4;36;1mPrikey Load (1.8ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 71ms (View: 63, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-26 08:13:48) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (2.5ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.9ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 12ms (View: 4, DB: 4) | 200 OK [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-26 08:13:49) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (2.5ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.1ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/edit
+Completed in 14ms (View: 8, DB: 3) | 200 OK [http://localhost/prikeys/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-26 08:28:01) [GET]
+  [4;36;1mFlightline Load (3.6ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 46ms (View: 34, DB: 5) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#index (for 127.0.0.1 at 2013-06-26 08:29:07) [GET]
+  [4;36;1mPrice Load (0.4ms)[0m   [0;1mSELECT * FROM `prices` [0m
+Rendering template within layouts/prices
+Rendering prices/index
+  [4;35;1mPrice Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+Completed in 59ms (View: 53, DB: 2) | 200 OK [http://localhost/prices]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#edit (for 127.0.0.1 at 2013-06-26 08:29:10) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrice Columns (2.1ms)[0m   [0;1mSHOW FIELDS FROM `prices`[0m
+  [4;35;1mPrice Load (0.2ms)[0m   [0mSELECT * FROM `prices` WHERE (`prices`.`id` = 1) [0m
+Rendering template within layouts/prices
+Rendering prices/edit
+Completed in 17ms (View: 11, DB: 2) | 200 OK [http://localhost/prices/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#index (for 127.0.0.1 at 2013-06-26 08:29:14) [GET]
+  [4;36;1mPrice Load (0.1ms)[0m   [0;1mSELECT * FROM `prices` [0m
+Rendering template within layouts/prices
+Rendering prices/index
+  [4;35;1mPrice Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+Completed in 10ms (View: 5, DB: 2) | 200 OK [http://localhost/prices]
+  [4;36;1mSQL (3.3ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (1.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Rails::InfoController#properties (for 127.0.0.1 at 2013-06-29 15:52:48) [GET]
+  [4;36;1mSQL (6.2ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (2.1ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Completed in 23ms (View: 1, DB: 13) | 200 OK [http://localhost/rails/info/properties]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-29 15:52:55) [GET]
+  [4;36;1mSegment Load (2.5ms)[0m   [0;1mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;35;1mSegment Columns (0.9ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+Completed in 30ms (View: 23, DB: 4) | 200 OK [http://localhost/segments]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#show (for 127.0.0.1 at 2013-06-29 15:52:59) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mSegment Columns (2.4ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+  [4;35;1mSegment Load (0.9ms)[0m   [0mSELECT * FROM `segments` WHERE (`segments`.`id` = 1) [0m
+Rendering template within layouts/segments
+Rendering segments/show
+Completed in 12ms (View: 5, DB: 3) | 200 OK [http://localhost/segments/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#edit (for 127.0.0.1 at 2013-06-29 15:53:02) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mSegment Columns (2.2ms)[0m   [0;1mSHOW FIELDS FROM `segments`[0m
+  [4;35;1mSegment Load (0.1ms)[0m   [0mSELECT * FROM `segments` WHERE (`segments`.`id` = 1) [0m
+Rendering template within layouts/segments
+Rendering segments/edit
+Completed in 15ms (View: 9, DB: 2) | 200 OK [http://localhost/segments/1/edit]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SegmentsController#index (for 127.0.0.1 at 2013-06-29 15:53:17) [GET]
+  [4;36;1mSegment Load (0.2ms)[0m   [0;1mSELECT * FROM `segments` [0m
+Rendering template within layouts/segments
+Rendering segments/index
+  [4;35;1mSegment Columns (2.4ms)[0m   [0mSHOW FIELDS FROM `segments`[0m
+Completed in 9ms (View: 4, DB: 3) | 200 OK [http://localhost/segments]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing FlightlinesController#index (for 127.0.0.1 at 2013-06-29 15:53:29) [GET]
+  [4;36;1mFlightline Load (1.8ms)[0m   [0;1mSELECT * FROM `flightlines` [0m
+Rendering template within layouts/flightlines
+Rendering flightlines/index
+  [4;35;1mFlightline Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `flightlines`[0m
+Completed in 29ms (View: 23, DB: 3) | 200 OK [http://localhost/flightlines]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PricesController#index (for 127.0.0.1 at 2013-06-29 15:53:46) [GET]
+  [4;36;1mPrice Load (1.6ms)[0m   [0;1mSELECT * FROM `prices` [0m
+Rendering template within layouts/prices
+Rendering prices/index
+  [4;35;1mPrice Columns (0.8ms)[0m   [0mSHOW FIELDS FROM `prices`[0m
+Completed in 17ms (View: 11, DB: 3) | 200 OK [http://localhost/prices]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-06-29 15:53:54) [GET]
+  [4;36;1mPrikey Load (2.0ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (0.7ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 21ms (View: 14, DB: 3) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-06-29 15:53:56) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.2ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 10ms (View: 4, DB: 2) | 200 OK [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-29 15:53:59) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (2.3ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (0.1ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/edit
+Completed in 14ms (View: 8, DB: 3) | 200 OK [http://localhost/prikeys/1/edit]

@@ -1,0 +1,24 @@
+<h1>Editing flightline</h1>
+
+<% form_for(@flightline) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :prikey_id %><br />
+    <%= f.text_field :prikey_id %>
+  </p>
+  <p>
+    <%= f.label :fltcombin %><br />
+    <%= f.text_field :fltcombin %>
+  </p>
+  <p>
+    <%= f.label :traveltype %><br />
+    <%= f.text_field :traveltype %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @flightline %> |
+<%= link_to 'Back', flightlines_path %>

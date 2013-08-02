@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  flightline_id: 1
+  segnum: 1
+  segmentinfo: MyText
+
+two:
+  flightline_id: 1
+  segnum: 1
+  segmentinfo: MyText

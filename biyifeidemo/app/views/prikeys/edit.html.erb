@@ -1,0 +1,24 @@
+<h1>Editing prikey</h1>
+
+<% form_for(@prikey) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :hashid_date %><br />
+    <%= f.text_field :hashid_date %>
+  </p>
+  <p>
+    <%= f.label :hashvalue_flts %><br />
+    <%= f.text_area :hashvalue_flts %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @prikey %> |
+<%= link_to 'Back', prikeys_path %>
