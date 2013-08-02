@@ -84,9 +84,27 @@ local resp = {};
 print(string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime));
 print("---------------------------")
 -- print(elotime)
-local url = string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime);
-local body, code, headers = http.request(url)
+-- local url = string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime);
+local respbody = {};
+local body, code, headers, status = http.request {
+	url = string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime),
+	--- proxy = "http://127.0.0.1:8888",
+	--- timeout = 3000,
+	method = "GET", -- POST or GET
+	-- add post content-type and cookie
+	headers = { ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6" },
+	-- body = formdata,
+	-- source = ltn12.source.string(form_data);
+	sink = ltn12.sink.table(respbody)
+}
+-- local body, code, headers = http.request(url)
 if code == 200 then
+	local body = "";
+	local reslen = table.getn(respbody)
+	for i = 1, reslen do
+		-- print(respbody[i])
+		body = body .. respbody[i]
+	end
 	for k in string.gmatch(body, 'flightno="(%w+)"') do
 		while k do
 			local res, err = client:sadd("elong:flt:" .. session, k)
@@ -136,8 +154,26 @@ if code == 200 then
 					noteurl = string.format(noteurl, string.lower(cityarr), string.lower(citydep), elotime, string.upper(string.sub(flts[f], 1, 2)), allprice.value[1].FlightClassNumber, _formencodepart(FlightTime), tostring(allprice.value[1].IsKSeat), tostring(allprice.value[1].IsPackagePromotion), org);
 					-- print(noteurl)
 					sleep(3)
-					local body, code, headers = http.request(noteurl)
+					-- local body, code, headers = http.request(noteurl)
+					local respbody = {};
+					local body, code, headers, status = http.request {
+						url = noteurl,
+						--- proxy = "http://127.0.0.1:8888",
+						--- timeout = 3000,
+						method = "GET", -- POST or GET
+						-- add post content-type and cookie
+						headers = { ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6" },
+						-- body = formdata,
+						-- source = ltn12.source.string(form_data);
+						sink = ltn12.sink.table(respbody)
+					}
 					if code == 200 then
+						local body = "";
+						local reslen = table.getn(respbody)
+						for i = 1, reslen do
+							-- print(respbody[i])
+							body = body .. respbody[i]
+						end
 			            local allrules = JSON.decode(body);
 			            if allrules then
 							salelimit["Notes"] = allrules.value;
