@@ -44,15 +44,23 @@ while url do
 		local body, code, headers = http.request(url)
 		if code == 200 then
 			local index = string.find(body, ":");
-			local proxy = string.sub(body, 1, index-1) .. ":" .. string.sub(body, index+1, -3)
-			print(proxy)
-			client:rpush("proxy:work", proxy)
-		--[[	
-		local body, code, headers = http.request("http://api.bestfly.cn/wxapi/resources/getProxy")
-		if code == 200 then
-			print(body)
-			client:rpush("proxy:work", tostring(body))
-		--]]
+			local buyproxy = string.sub(body, 1, index-1) .. ":" .. string.sub(body, index+1, -3)
+			-- print(proxy)
+			local body, code, headers, status = http.request {
+				url = "http://flight.elong.com/",
+				--- proxy = "http://127.0.0.1:8888",
+				proxy = "http://" .. buyproxy,
+				timeout = 2000,
+				method = "GET", -- POST or GET
+				-- add post content-type and cookie
+				headers = { ["Host"] = "flight.elong.com", ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6" },
+				-- body = formdata,
+				-- source = ltn12.source.string(form_data);
+				sink = ltn12.sink.table(respbody)
+			}
+			if code == 200 then
+				client:rpush("proxy:work", buyproxy)
+			end
 		end
 		len = client:llen("proxy:work")
 	end

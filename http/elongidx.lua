@@ -29,7 +29,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("192.168.10.93", 6379)
+local ok, err = red:connect("127.0.0.1", 6389)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return

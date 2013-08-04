@@ -13,8 +13,8 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 -- pcall(require, "luarocks.require")
 local redis = require 'redis'
 local params = {
-    host = '192.168.10.93',
-    port = 6379,
+    host = '127.0.0.1',
+    port = 6389,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
@@ -87,20 +87,21 @@ print(string.format(baseurl, string.lower(citydep), string.lower(cityarr), eloti
 print("---------------------------")
 -- print(elotime)
 -- local url = string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime);
-local res, err = client:blpop("proxy:work", 2)
+local res, err = client:blpop("proxy:work", 0)
 -- print(res)
 -- print(type(res[1]), res[1], res[2])
 -- print(table.getn(res))
 if res ~= nil then
 	local respbody = {};
-	print(tostring(res[2]))
-	http.PROXY = "http://" .. tostring(res[2]) .. "/";
-	print(http.PROXY);
-	print("-------------forign need proxy--------------")
+	-- print(tostring(res[2]))
+	-- change to insert proxy into the http.request table.
+	-- http.PROXY = "http://" .. tostring(res[2]) .. "/";
+	print("http://" .. tostring(res[2]) .. "/")
+	print("-------------Get fltno withproxy--------------")
 	local body, code, headers, status = http.request {
 		url = string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime),
 		--- proxy = "http://127.0.0.1:8888",
-		-- proxy = "http://" .. tostring(res[1]),
+		proxy = "http://" .. tostring(res[2]),
 		timeout = 6000,
 		method = "GET", -- POST or GET
 		-- add post content-type and cookie
@@ -111,19 +112,19 @@ if res ~= nil then
 	}
 	-- local body, code, headers = http.request(url)
 	if code == 200 then
-		local body = "";
+		local rescontent = "";
 		local reslen = table.getn(respbody)
 		for i = 1, reslen do
 			-- print(respbody[i])
-			body = body .. respbody[i]
+			rescontent = rescontent .. respbody[i]
 		end
-		for k in string.gmatch(body, 'flightno="(%w+)"') do
+		for k in string.gmatch(rescontent, 'flightno="(%w+)"') do
 			while k do
 				local res, err = client:sadd("elong:flt:" .. session, k)
 				if res then
 					client:expire("elong:flt:" .. session, 60)
 				end
-				break;
+				break
 			end
 		end
 		local flts = client:smembers("elong:flt:" .. session)
@@ -134,11 +135,12 @@ if res ~= nil then
 				local fltmuli = "idx-elong/" .. string.lower(org) .. "/" .. string.lower(dst) .. "/" .. string.lower(flts[f]) .. "/" .. t .. "/";
 				-- table.insert(reqs, { fltmuli })
 				print(idxurl .. fltmuli)
-				http.PROXY = nil;
-				print(http.PROXY);
-				print("-------------localhost NO proxy--------------")
+				print("-------------local NO proxy--------------")
 				local body, code, headers = http.request(idxurl .. fltmuli)
-				if code == 200 then
+				local j = string.gsub(body,'\"([^\"]-)\":','%1=')
+				local t, c = string.gsub(j,'%b\[\]','')
+				if c ~= 0 then
+				-- if code == 200 then
 		            local allprice = JSON.decode(body);
 		            if allprice then
 						-- print(fltmuli, flts[f], table.getn(allprice.value[1]))
@@ -171,14 +173,12 @@ if res ~= nil then
 						sleep(3)
 						-- local body, code, headers = http.request(noteurl)
 						local respbody = {};
-						http.PROXY = "http://" .. tostring(res[2]) .. "/";
-						print(http.PROXY);
 						print("-------------forign need proxy--------------")
 						local body, code, headers, status = http.request {
 							url = noteurl,
 							--- proxy = "http://127.0.0.1:8888",
-							-- proxy = "http://" .. tostring(res[1]),
-							timeout = 6000,
+							proxy = "http://" .. tostring(res[2]),
+							timeout = 5000,
 							method = "GET", -- POST or GET
 							-- add post content-type and cookie
 							headers = { ["Host"] = "flight.elong.com", ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6" },
@@ -187,14 +187,17 @@ if res ~= nil then
 							sink = ltn12.sink.table(respbody)
 						}
 						if code == 200 then
-							local body = "";
+							local reslimit = "";
 							local reslen = table.getn(respbody)
 							for i = 1, reslen do
 								-- print(respbody[i])
-								body = body .. respbody[i]
+								reslimit = reslimit .. respbody[i]
 							end
-				            local allrules = JSON.decode(body);
-				            if allrules then
+							local j = string.gsub(reslimit,'\"([^\"]-)\":','%1=')
+							local t, c = string.gsub(j,'%b\[\]','')
+							if c ~= 0 then
+				            	local allrules = JSON.decode(reslimit);
+				            -- if allrules then
 								salelimit["Notes"] = allrules.value;
 							else
 								salelimit["Notes"] = JSON.null;
