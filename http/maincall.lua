@@ -14,8 +14,8 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 -- pcall(require, "luarocks.require")
 local redis = require 'redis'
 local params = {
-    host = '192.168.10.93',
-    port = 6379,
+    host = '127.0.0.1',
+    port = 6389,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
@@ -38,24 +38,6 @@ function sleep(n)
 end
 local url = "http://api.bestfly.cn/task-queues/1/";
 while url do
-	local len, err = client:llen("proxy:work")
-	print(tonumber(len))
-	while tonumber(len) < 2 do
-		local body, code, headers = http.request("http://www.dailiaaa.com/?ddh=394605632872055&dq=&sl=1&issj=0&xl=3&tj=fff&api=14&cf=4&yl=1")
-		if code == 200 then
-			local index = string.find(body, ":");
-			local proxy = string.sub(body, 1, index-1) .. ":" .. string.sub(body, index+1, -3)
-			print(proxy)
-			client:rpush("proxy:work", proxy)
-		--[[	
-		local body, code, headers = http.request("http://api.bestfly.cn/wxapi/resources/getProxy")
-		if code == 200 then
-			print(body)
-			client:rpush("proxy:work", tostring(body))
-		--]]
-		end
-		len = client:llen("proxy:work")
-	end
 	local body, code, headers = http.request(url)
 	if code == 200 then
 		-- print(JSON.decode(body).taskQueues[1]);
@@ -69,15 +51,15 @@ while url do
 			local body, code, headers = http.request(capi)
 			if code == 200 then
 				print(code, body);
-				for k, v in pairs(headers) do
-					print(k, v);
-				end
+				print("------------capi sucess------------")
 				local body, code, headers = http.request(api)
 				if code == 200 then
-					print(code, body);
+					print(code);
+					print("------------combinate price sucess------------")
 					for k, v in pairs(headers) do
 						print(k, v);
 					end
+					print("---------------------------")
 				end
 				break;
 			else
@@ -86,9 +68,9 @@ while url do
 			end
 		end
 	else
-		print(code)
-		print("---------------------------")
-		print(body)
+		-- if get no mission sleep 10;
+		print("------------NO mission left-----------")
+		sleep(10)
 	end
-	sleep(1);
+	sleep(0.1)
 end
