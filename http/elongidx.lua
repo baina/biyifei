@@ -29,7 +29,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6379)
+local ok, err = red:connect("127.0.0.1", 6389)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -132,7 +132,7 @@ if ngx.var.request_method == "GET" then
 		local ok, code, headers, status, body = hc:request {
 			url = "http://flight.elong.com/isajax/OneWay/GetMorePrices",
 			-- url = "http://labs.rhomobi.com:18081/rholog",
-			proxy = "http://" .. tostring(res[1]) .. "/",
+			proxy = "http://" .. tostring(res[1]),
 			timeout = 6000,
 			method = "POST", -- POST or GET
 			-- add post content-type and cookie
@@ -140,20 +140,17 @@ if ngx.var.request_method == "GET" then
 			-- body = ltn12.source.string(form_data),
 			body = form_data,
 		}
-		--[[
-		ngx.say(ok)
-		ngx.say(code)
-		for k, v in pairs(headers) do
-			ngx.say(k, v);
-		end
-		ngx.say(status)
-		ngx.say(body)
-		--]]
 		if code == 200 then
 			ngx.print(body);
+		else
+			ngx.say(code)
+			for k, v in pairs(headers) do
+				ngx.say(k, v);
+			end
+			ngx.print(status)
 		end
 	else
-		ngx.print(err)
+		ngx.print("failed to lrange the proxy:work, the proxy result is: ", err)
 	end
 else
 	ngx.exit(ngx.HTTP_FORBIDDEN);
