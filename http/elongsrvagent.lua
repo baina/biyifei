@@ -14,7 +14,7 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 local redis = require 'redis'
 local params = {
     host = '127.0.0.1',
-    port = 6389,
+    port = 6379,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
@@ -81,7 +81,7 @@ print(session)
 print("---------------------------")
 -- ngx.say(citydep, cityarr)
 local baseurl = "http://flight.elong.com/%s-%s/cn_day%s.html"
-local idxurl = "http://localhost:6001/"
+local idxurl = "http://localhost:18081/"
 local resp = {};
 print(string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime));
 print("---------------------------")
@@ -96,7 +96,7 @@ if res ~= nil then
 	-- print(tostring(res[2]))
 	-- change to insert proxy into the http.request table.
 	-- http.PROXY = "http://" .. tostring(res[2]) .. "/";
-	print("http://" .. tostring(res[2]) .. "/")
+	print("http://" .. tostring(res[2]))
 	print("-------------Get fltno withproxy--------------")
 	local body, code, headers, status = http.request {
 		url = string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime),
@@ -138,7 +138,7 @@ if res ~= nil then
 				print("-------------local NO proxy--------------")
 				local body, code, headers = http.request(idxurl .. fltmuli)
 				local j = string.gsub(body,'\"([^\"]-)\":','%1=')
-				local t, c = string.gsub(j,'%b\[\]','')
+				local tjson, c = string.gsub(j,'%b\[\]','')
 				if c ~= 0 then
 				-- if code == 200 then
 		            local allprice = JSON.decode(body);
@@ -194,7 +194,7 @@ if res ~= nil then
 								reslimit = reslimit .. respbody[i]
 							end
 							local j = string.gsub(reslimit,'\"([^\"]-)\":','%1=')
-							local t, c = string.gsub(j,'%b\[\]','')
+							local tjson, c = string.gsub(j,'%b\[\]','')
 							if c ~= 0 then
 				            	local allrules = JSON.decode(reslimit);
 				            -- if allrules then
@@ -210,6 +210,8 @@ if res ~= nil then
 						-- resp[flts[f]] = tmpres;
 						-- print(JSON.encode(tmpres))
 						-- print(JSON.encode(resp));
+						-- elong:cgq/hgh/{success=true,value=}/
+						print('elong:' .. string.lower(org) .. '/' .. string.lower(dst) .. '/' .. t .. '/');
 						client:hdel('elong:' .. string.lower(org) .. '/' .. string.lower(dst) .. '/' .. t .. '/', flts[f]);
 						local ok, err = client:hset('elong:' .. string.lower(org) .. '/' .. string.lower(dst) .. '/' .. t .. '/', flts[f], JSON.encode(tmpres))
 						if ok then
