@@ -23,7 +23,7 @@ print(t)
 
 --]]
 
-local file = io.open("/data/rails2.3.5/biyifei/agent/jsontest.lua", "r");
+local file = io.open("/data/rails2.3.5/biyifei/agent/config.json", "r");
 local content = file:read("*all");
 file:close();
 local j = string.gsub(content,'\"([^\"]-)\":','%1=')
