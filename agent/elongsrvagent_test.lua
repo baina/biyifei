@@ -13,7 +13,7 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 -- pcall(require, "luarocks.require")
 local redis = require 'redis'
 local params = {
-    host = '192.168.10.93',
+    host = '127.0.0.1',
     port = 6379,
 }
 local client = redis.connect(params)
@@ -81,7 +81,7 @@ print(session)
 print("---------------------------")
 -- ngx.say(citydep, cityarr)
 local baseurl = "http://flight.elong.com/%s-%s/cn_day%s.html"
-local idxurl = "http://localhost:6001/"
+local idxurl = "http://192.168.10.93:18081/"
 local resp = {};
 print(string.format(baseurl, string.lower(citydep), string.lower(cityarr), elotime));
 print("---------------------------")
