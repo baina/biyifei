@@ -29,7 +29,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6389)
+local ok, err = red:connect("127.0.0.1", 6379)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -129,15 +129,14 @@ if ngx.var.request_method == "GET" then
 		-- ngx.say(table.getn(res))
 		-- res[1] is ip and port; res[2] is nil.
 		-- ngx.say("http://" .. tostring(res[1]))
-		hc.proxy = "http://" .. tostring(res[1]);
 		local ok, code, headers, status, body = hc:request {
 			url = "http://flight.elong.com/isajax/OneWay/GetMorePrices",
 			-- url = "http://labs.rhomobi.com:18081/rholog",
-			-- proxy = "http://" .. tostring(res[1]),
+			proxy = "http://" .. tostring(res[1]) .. "/",
 			timeout = 6000,
 			method = "POST", -- POST or GET
 			-- add post content-type and cookie
-			headers = { ["Content-Type"] = "application/x-www-form-urlencoded", ["Content-Length"] = string.len(form_data), ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6"},
+			headers = { ["Host"] = "flight.elong.com", ["Content-Type"] = "application/x-www-form-urlencoded", ["Content-Length"] = string.len(form_data), ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6"},
 			-- body = ltn12.source.string(form_data),
 			body = form_data,
 		}

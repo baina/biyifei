@@ -40,7 +40,7 @@ local url = "http://www.dailiaaa.com/?ddh=394605632872055&dq=&sl=1&issj=0&xl=3&t
 while url do
 	local len, err = client:llen("proxy:work")
 	print(tonumber(len))
-	while tonumber(len) < 2 do
+	while tonumber(len) < 3 do
 		local body, code, headers = http.request(url)
 		if code == 200 then
 			local index = string.find(body, ":");
