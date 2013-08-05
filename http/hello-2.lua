@@ -40,3 +40,7 @@ function json(json)
 	-- loadstring(j)()
 	return t
 end
+
+
+local tmprandom = math.random(8001,9999);
+print(tmprandom)
