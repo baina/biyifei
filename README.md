@@ -103,6 +103,7 @@ with a IRB prompt in the server window. Here you can do things like:
 TODO
 ====
 
+* Circle model scheduling algorithm
 * implement the redirect supported
 * implement the chunked
 * implement the keepalive
