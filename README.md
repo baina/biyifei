@@ -38,7 +38,9 @@ in Nginx, configure the elongidx.lua for elong.com, and other ota's name combina
 
 == nginx configure example for elongidx.lua
 
-# General Nginx options
+General Nginx options
+======
+
     location ~ '^/idx-elong/([A-Za-z0-9]{3})/([A-Za-z0-9]{3})/([A-Za-z0-9]{5,6})/([0-9]{8})/$'
     {
       default_type 'text/plain;charset=utf-8';
@@ -85,6 +87,8 @@ in the code, investigate and change the model, AND then resume execution!
 You need to install ruby-debug to run the server in debugging mode. With gems, use 'gem install ruby-debug'
 Example:
 
+```bash
+
   if body then
 			local wname = "/data/logs/rholog.txt"
 			local wfile = io.open(wname, "w+");
@@ -103,6 +107,8 @@ Example:
 			wfile:write(body .. "\n");
 			io.close(wfile);
 	end
+
+```
 
 So the controller will open yourlogfilename.log, run the first line, then present you
 with a IRB prompt in the server window. Here you can do things like:
