@@ -38,8 +38,9 @@ in Nginx, configure the elongidx.lua for elong.com, and other ota's name combina
 
 == nginx configure example for elongidx.lua
 
-General Nginx options
-======
+== General Nginx options
+
+```bash
 
     location ~ '^/idx-elong/([A-Za-z0-9]{3})/([A-Za-z0-9]{3})/([A-Za-z0-9]{5,6})/([0-9]{8})/$'
     {
@@ -50,6 +51,8 @@ General Nginx options
       set $date $4;
     content_by_lua_file /data/rails2.3.5/biyifei/http/elongidx.lua;
     }
+
+```
 
 == Debugging lua
 
