@@ -119,7 +119,7 @@ Copyright and License
 
 This module is licensed under the BSD license.
 
-Copyright (C) 2012, by Huang "baina" Qi (黄琦) <jijilu@189.cn>.
+Copyright (C) 2013, by Huang "baina" Qi (黄琦) <jijilu@189.cn>.
 
 All rights reserved.
 
