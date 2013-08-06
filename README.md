@@ -59,30 +59,11 @@ in Nginx, configure the elongidx.lua for elong.com, and other ota's name combina
 Sometimes your application goes wrong.  Fortunately there are a lot of tools that
 will help you debug it and get it back on the nginx and linux lua envirement.
 
-First area to check is the application log files.  Have "debug_htt" configuration running
+First area to check is the application log files.  Have "debug_http" configuration running
 on the nginx.conf and youlogfilename.log in the error dir.
 
 You can also log your own messages directly into the log file from your code using
-the lua logger class from inside your controllers. Example:
-
-
-
-The result will be a message in your log file along the lines of:
-
-  Mon Oct 08 14:22:29 +1000 2007 Destroyed Weblog ID #1
-
-More information on how to use the logger is at http://www.ruby-doc.org/core/
-
-Also, Ruby documentation can be found at http://www.ruby-lang.org/ including:
-
-* The Learning Ruby (Pickaxe) Book: http://www.ruby-doc.org/docs/ProgrammingRuby/
-* Learn to Program: http://pine.fm/LearnToProgram/  (a beginners guide)
-
-These two online (and free) books will bring you up to speed on the Ruby language
-and also on programming in general.
-
-
-== Debugger
+the lua logger class from inside your controllers.
 
 Debugger support is available through the debugger command when you start your Mongrel or
 Webrick server with --debugger. This means that you can break out of execution at any point
