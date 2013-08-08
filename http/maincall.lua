@@ -15,7 +15,7 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 local redis = require 'redis'
 local params = {
     host = '127.0.0.1',
-    port = 6389,
+    port = 6379,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
@@ -37,6 +37,7 @@ function sleep(n)
    socket.select(nil, nil, n)
 end
 local url = "http://api.bestfly.cn/task-queues/1/";
+local dis = "http://api.bestfly.cn/distribute/PriceUpdate/";
 while url do
 	local body, code, headers = http.request(url)
 	if code == 200 then
@@ -44,28 +45,21 @@ while url do
 		local arg = JSON.decode(body).taskQueues[1];
 		local capi = "http://api.bestfly.cn/capi/ext-price/" .. string.sub(arg, 1, 8) .. "ow/" .. string.sub(arg, -9, -1);
 		local api = "http://api.bestfly.cn/ext-price/" .. string.sub(arg, 1, 8) .. "ow/" .. string.sub(arg, -9, -1);
-		local elongcmd = "/usr/local/bin/lua /data/rails2.3.5/biyifei/http/elongsrvagent.lua " .. arg;
+		local elongcmd = "/usr/local/bin/lua /usr/local/webserver/lua/agent/elongsrvagent.lua " .. arg;
 		-- local elongcmd = "/usr/local/bin/lua /data/rails2.3.5/biyifei/http/elongsrvagent.lua cgq/hgh/20130807/";
 		os.execute(elongcmd);
 		while true do
-			local body, code, headers = http.request(capi)
-			if code == 200 then
-				print(code, body);
-				print("------------capi sucess------------")
-				local body, code, headers = http.request(api)
-				if code == 200 then
-					print(code);
-					print("------------combinate price sucess------------")
-					for k, v in pairs(headers) do
-						print(k, v);
-					end
-					print("---------------------------")
-				end
+			local ok, err = client:rpush("price:comb", arg)
+			if ok then
+				print("----------price:comb ok-----------")
 				break;
-			else
-				print(code)
-				print("------------capi error--------------")
 			end
+		end
+		local body, code, headers = http.request(dis .. arg)
+                if code == 200 then
+			print("---------Distribute sucess-------------")
+		else
+			print("---------Distribute failer-------------")
 		end
 	else
 		-- if get no mission sleep 10;
