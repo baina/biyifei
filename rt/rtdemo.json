@@ -1,0 +1,387 @@
+{
+    "flightline_id": "7ca0d70228257828c44ffecc91df070a",
+    "prices_data": [
+        {
+            "ctrip": {
+                "salelimit": {
+                    "RedirectURI": "http://u.ctrip.com/union/CtripRedirect.aspx?TypeID=2&amp;Allianceid=9134&amp;sid=186423&amp;OUID=&amp;jumpUrl=http%3a%2f%2fflights.ctrip.com%2fInternational%2fShowFareFirst.aspx%3fFlightType%3dD%26DCity%3dCAN%26ACity%3dLAX%26RelDDate%3d42%26RelRDate%3d59%26FareID%3d38367498",
+                    "BeforeFlyDate": "7",
+                    "ADDONPID": "0",
+                    "NoSalesStr": "只售：CAN-TYO:*,1234567,,;TYO-LAX:*;LAX-TYO:*;TYO-CAN:*,1234567,,;WITHIN US NH/UA; BETWEEN JP-US NH(NH)/NH(NQ)/NH(UA); BETWEEN CN-JP NH(NH);",
+                    "PrintTicketDay": "7",
+                    "ShoppingInfoID": "[1/2[CAN-NH-S-TYO-NH-S-LAX(NOA,N38367498G,S2925,C1571)]+1/2[LAX-NH-S-TYO-NH-S-CAN(NOA,N38367498G,S2925,C1571)]|NOR]{NH934CANTYO0923,1|NH006TYOLAX0923,1|NH7019LAXTYO1010UA0032,2|NH933TYOCAN1011,2|}",
+                    "IsOpen": "false",
+                    "Adjustday2": "30",
+                    "IsIssueNeeded": "false",
+                    "TicketType": "BSPET",
+                    "SDSS": "false",
+                    "Eligibility": "NOR",
+                    "GiftNum": "0",
+                    "RemarkFareId": "N38367498",
+                    "FareID": "38367498",
+                    "LastPrintDate": "2013-08-19T16:30:00+08:00",
+                    "FDZWCP": "2014-03-30T16:30:00",
+                    "ExpiryDate": "2013-09-27T00:00:00",
+                    "Recommend": "2",
+                    "ZWCP": "2013-08-19T16:30:00",
+                    "LeastPerson": "1",
+                    "OwnerAirline": "NH",
+                    "IsSpecial": "false",
+                    "TicketRemark": ",",
+                    "StartDate": "2013-09-01T00:00:00",
+                    "Adjustday1": "3"
+                },
+                "priceinfo": {
+                    "FloorRate": "0.0300",
+                    "Tax": "2070",
+                    "FloorPrice": "5335",
+                    "SalesPrice": "5500",
+                    "Price": "5500",
+                    "ProfitType": "1",
+                    "AgentCityID": "32",
+                    "IsContainOil": "false",
+                    "AgentID": "159",
+                    "Currency": "CNY",
+                    "Exchange": "1",
+                    "SalesRate": "1.03",
+                    "Surcharge": "0",
+                    "FuelCharge": "0",
+                    "AgentCityCode": "CAN"
+                }
+            }
+        },
+        {
+            "ctrip": {
+                "salelimit": {
+                    "RedirectURI": "http://u.ctrip.com/union/CtripRedirect.aspx?TypeID=2&amp;Allianceid=9134&amp;sid=186423&amp;OUID=&amp;jumpUrl=http%3a%2f%2fflights.ctrip.com%2fInternational%2fShowFareFirst.aspx%3fFlightType%3dD%26DCity%3dCAN%26ACity%3dLAX%26RelDDate%3d42%26RelRDate%3d59%26FareID%3d38367574",
+                    "BeforeFlyDate": "7",
+                    "ADDONPID": "0",
+                    "NoSalesStr": "只售：CAN-TYO:*,1234567,,;TYO-LAX:*;LAX-TYO:*;TYO-CAN:*,1234567,,;WITHIN US NH/UA; BETWEEN JP-US NH(NH)/NH(NQ)/NH(UA); BETWEEN CN-JP NH(NH);",
+                    "PrintTicketDay": "7",
+                    "ShoppingInfoID": "[1/2[CAN-NH-W-TYO-NH-W-LAX(NOA,N38367574G,S2925,C1571)]+1/2[LAX-NH-W-TYO-NH-W-CAN(NOA,N38367574G,S2925,C1571)]|NOR]{NH934CANTYO0923,1|NH006TYOLAX0923,1|NH7019LAXTYO1010UA0032,2|NH933TYOCAN1011,2|}",
+                    "IsOpen": "false",
+                    "Adjustday2": "91",
+                    "IsIssueNeeded": "false",
+                    "TicketType": "BSPET",
+                    "SDSS": "false",
+                    "Eligibility": "NOR",
+                    "GiftNum": "0",
+                    "RemarkFareId": "N38367574",
+                    "FareID": "38367574",
+                    "LastPrintDate": "2013-08-19T16:30:00+08:00",
+                    "FDZWCP": "2014-03-30T16:30:00",
+                    "ExpiryDate": "2013-09-27T00:00:00",
+                    "Recommend": "2",
+                    "ZWCP": "2013-08-19T16:30:00",
+                    "LeastPerson": "1",
+                    "OwnerAirline": "NH",
+                    "IsSpecial": "false",
+                    "TicketRemark": ",",
+                    "StartDate": "2013-09-01T00:00:00",
+                    "Adjustday1": "3"
+                },
+                "priceinfo": {
+                    "FloorRate": "0.0300",
+                    "Tax": "2070",
+                    "FloorPrice": "6790",
+                    "SalesPrice": "7000",
+                    "Price": "7000",
+                    "ProfitType": "1",
+                    "AgentCityID": "32",
+                    "IsContainOil": "false",
+                    "AgentID": "159",
+                    "Currency": "CNY",
+                    "Exchange": "1",
+                    "SalesRate": "1.03",
+                    "Surcharge": "0",
+                    "FuelCharge": "0",
+                    "AgentCityCode": "CAN"
+                }
+            }
+        },
+        {
+            "ctrip": {
+                "salelimit": {
+                    "RedirectURI": "http://u.ctrip.com/union/CtripRedirect.aspx?TypeID=2&amp;Allianceid=9134&amp;sid=186423&amp;OUID=&amp;jumpUrl=http%3a%2f%2fflights.ctrip.com%2fInternational%2fShowFareFirst.aspx%3fFlightType%3dD%26DCity%3dCAN%26ACity%3dLAX%26RelDDate%3d42%26RelRDate%3d59%26FareID%3d38367544",
+                    "BeforeFlyDate": "7",
+                    "ADDONPID": "0",
+                    "NoSalesStr": "只售：CAN-TYO:*,1234567,,;TYO-LAX:*;LAX-TYO:*;TYO-CAN:*,1234567,,;WITHIN US NH/UA; BETWEEN JP-US NH(NH)/NH(NQ)/NH(UA); BETWEEN CN-JP NH(NH);",
+                    "PrintTicketDay": "7",
+                    "ShoppingInfoID": "[1/2[CAN-NH-V-TYO-NH-V-LAX(NOA,N38367544G,S2925,C1571)]+1/2[LAX-NH-V-TYO-NH-V-CAN(NOA,N38367544G,S2925,C1571)]|NOR]{NH934CANTYO0923,1|NH006TYOLAX0923,1|NH7019LAXTYO1010UA0032,2|NH933TYOCAN1011,2|}",
+                    "IsOpen": "false",
+                    "Adjustday2": "91",
+                    "IsIssueNeeded": "false",
+                    "TicketType": "BSPET",
+                    "SDSS": "false",
+                    "Eligibility": "NOR",
+                    "GiftNum": "0",
+                    "RemarkFareId": "N38367544",
+                    "FareID": "38367544",
+                    "LastPrintDate": "2013-08-19T16:30:00+08:00",
+                    "FDZWCP": "2014-03-30T16:30:00",
+                    "ExpiryDate": "2013-09-27T00:00:00",
+                    "Recommend": "2",
+                    "ZWCP": "2013-08-19T16:30:00",
+                    "LeastPerson": "1",
+                    "OwnerAirline": "NH",
+                    "IsSpecial": "false",
+                    "TicketRemark": ",",
+                    "StartDate": "2013-09-01T00:00:00",
+                    "Adjustday1": "3"
+                },
+                "priceinfo": {
+                    "FloorRate": "0.0300",
+                    "Tax": "2070",
+                    "FloorPrice": "8730",
+                    "SalesPrice": "9000",
+                    "Price": "9000",
+                    "ProfitType": "1",
+                    "AgentCityID": "32",
+                    "IsContainOil": "false",
+                    "AgentID": "159",
+                    "Currency": "CNY",
+                    "Exchange": "1",
+                    "SalesRate": "1.03",
+                    "Surcharge": "0",
+                    "FuelCharge": "0",
+                    "AgentCityCode": "CAN"
+                }
+            }
+        },
+        {
+            "ctrip": {
+                "salelimit": {
+                    "RedirectURI": "http://u.ctrip.com/union/CtripRedirect.aspx?TypeID=2&amp;Allianceid=9134&amp;sid=186423&amp;OUID=&amp;jumpUrl=http%3a%2f%2fflights.ctrip.com%2fInternational%2fShowFareFirst.aspx%3fFlightType%3dD%26DCity%3dCAN%26ACity%3dLAX%26RelDDate%3d42%26RelRDate%3d59%26FareID%3d38367456",
+                    "BeforeFlyDate": "7",
+                    "ADDONPID": "0",
+                    "NoSalesStr": "只售：CAN-TYO:*,1234567,,;TYO-LAX:*;LAX-TYO:*;TYO-CAN:*,1234567,,;WITHIN US NH/UA; BETWEEN JP-US NH(NH)/NH(NQ)/NH(UA); BETWEEN CN-JP NH(NH);",
+                    "PrintTicketDay": "7",
+                    "ShoppingInfoID": "[1/2[CAN-NH-Q-TYO-NH-Q-LAX(NOA,N38367456G,S2925,C1571)]+1/2[LAX-NH-Q-TYO-NH-Q-CAN(NOA,N38367456G,S2925,C1571)]|NOR]{NH934CANTYO0923,1|NH006TYOLAX0923,1|NH7019LAXTYO1010UA0032,2|NH933TYOCAN1011,2|}",
+                    "IsOpen": "false",
+                    "Adjustday2": "181",
+                    "IsIssueNeeded": "false",
+                    "TicketType": "BSPET",
+                    "SDSS": "false",
+                    "Eligibility": "NOR",
+                    "GiftNum": "0",
+                    "RemarkFareId": "N38367456",
+                    "FareID": "38367456",
+                    "LastPrintDate": "2013-08-19T16:30:00+08:00",
+                    "FDZWCP": "2014-03-30T16:30:00",
+                    "ExpiryDate": "2013-09-27T00:00:00",
+                    "Recommend": "2",
+                    "ZWCP": "2013-08-19T16:30:00",
+                    "LeastPerson": "1",
+                    "OwnerAirline": "NH",
+                    "IsSpecial": "false",
+                    "TicketRemark": ",",
+                    "StartDate": "2013-09-01T00:00:00",
+                    "Adjustday1": "3"
+                },
+                "priceinfo": {
+                    "FloorRate": "0.0300",
+                    "Tax": "2070",
+                    "FloorPrice": "9700",
+                    "SalesPrice": "10000",
+                    "Price": "10000",
+                    "ProfitType": "1",
+                    "AgentCityID": "32",
+                    "IsContainOil": "false",
+                    "AgentID": "159",
+                    "Currency": "CNY",
+                    "Exchange": "1",
+                    "SalesRate": "1.03",
+                    "Surcharge": "0",
+                    "FuelCharge": "0",
+                    "AgentCityCode": "CAN"
+                }
+            }
+        },
+        {
+            "ctrip": {
+                "salelimit": {
+                    "RedirectURI": "http://u.ctrip.com/union/CtripRedirect.aspx?TypeID=2&amp;Allianceid=9134&amp;sid=186423&amp;OUID=&amp;jumpUrl=http%3a%2f%2fflights.ctrip.com%2fInternational%2fShowFareFirst.aspx%3fFlightType%3dD%26DCity%3dCAN%26ACity%3dLAX%26RelDDate%3d42%26RelRDate%3d59%26FareID%3d38367363",
+                    "BeforeFlyDate": "7",
+                    "ADDONPID": "0",
+                    "NoSalesStr": "只售：CAN-TYO:*,1234567,,;TYO-LAX:*;LAX-TYO:*;TYO-CAN:*,1234567,,;WITHIN US NH/UA; BETWEEN JP-US NH(NH)/NH(NQ)/NH(UA); BETWEEN CN-JP NH(NH);",
+                    "PrintTicketDay": "7",
+                    "ShoppingInfoID": "[1/2[CAN-NH-H-TYO-NH-H-LAX(NOA,N38367363G,S2925,C1571)]+1/2[LAX-NH-H-TYO-NH-H-CAN(NOA,N38367363G,S2925,C1571)]|NOR]{NH934CANTYO0923,1|NH006TYOLAX0923,1|NH7019LAXTYO1010UA0032,2|NH933TYOCAN1011,2|}",
+                    "IsOpen": "false",
+                    "Adjustday2": "181",
+                    "IsIssueNeeded": "false",
+                    "TicketType": "BSPET",
+                    "SDSS": "false",
+                    "Eligibility": "NOR",
+                    "GiftNum": "0",
+                    "RemarkFareId": "N38367363",
+                    "FareID": "38367363",
+                    "LastPrintDate": "2013-08-19T16:30:00+08:00",
+                    "FDZWCP": "2014-03-30T16:30:00",
+                    "ExpiryDate": "2013-09-27T00:00:00",
+                    "Recommend": "2",
+                    "ZWCP": "2013-08-19T16:30:00",
+                    "LeastPerson": "1",
+                    "OwnerAirline": "NH",
+                    "IsSpecial": "false",
+                    "TicketRemark": ",",
+                    "StartDate": "2013-09-01T00:00:00",
+                    "Adjustday1": "3"
+                },
+                "priceinfo": {
+                    "FloorRate": "0.0300",
+                    "Tax": "2070",
+                    "FloorPrice": "11834",
+                    "SalesPrice": "12200",
+                    "Price": "12190",
+                    "ProfitType": "1",
+                    "AgentCityID": "32",
+                    "IsContainOil": "false",
+                    "AgentID": "159",
+                    "Currency": "CNY",
+                    "Exchange": "1",
+                    "SalesRate": "1.03",
+                    "Surcharge": "0",
+                    "FuelCharge": "0",
+                    "AgentCityCode": "CAN"
+                }
+            }
+        }
+    ],
+    "bunks_idx": [
+        [
+            {
+                "ClassGrade": "Y",
+                "Schedule": "1234567",
+                "Quantity": "9",
+                "Baggage": "去程-CAN-TYO: 普通乘客:1件,每件23公斤；|TYO-LAX: 普通乘客:1件,每件23公斤；；回程-LAX-TYO: 普通乘客:1件,每件23公斤；|TYO-CAN: 普通乘客:1件,每件23公斤；",
+                "SubClass": "S"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "S"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "4",
+                "Schedule": "1234567",
+                "SubClass": "S"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "S"
+            }
+        ],
+        [
+            {
+                "ClassGrade": "Y",
+                "Schedule": "1234567",
+                "Quantity": "9",
+                "Baggage": "去程-CAN-TYO: 普通乘客:1件,每件23公斤；|TYO-LAX: 普通乘客:1件,每件23公斤；；回程-LAX-TYO: 普通乘客:1件,每件23公斤；|TYO-CAN: 普通乘客:1件,每件23公斤；",
+                "SubClass": "W"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "W"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "4",
+                "Schedule": "1234567",
+                "SubClass": "W"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "W"
+            }
+        ],
+        [
+            {
+                "ClassGrade": "Y",
+                "Schedule": "1234567",
+                "Quantity": "9",
+                "Baggage": "去程-CAN-TYO: 普通乘客:1件,每件23公斤；|TYO-LAX: 普通乘客:1件,每件23公斤；；回程-LAX-TYO: 普通乘客:1件,每件23公斤；|TYO-CAN: 普通乘客:1件,每件23公斤；",
+                "SubClass": "V"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "V"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "4",
+                "Schedule": "1234567",
+                "SubClass": "V"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "V"
+            }
+        ],
+        [
+            {
+                "ClassGrade": "Y",
+                "Schedule": "1234567",
+                "Quantity": "9",
+                "Baggage": "去程-CAN-TYO: 普通乘客:1件,每件23公斤；|TYO-LAX: 普通乘客:1件,每件23公斤；；回程-LAX-TYO: 普通乘客:1件,每件23公斤；|TYO-CAN: 普通乘客:1件,每件23公斤；",
+                "SubClass": "Q"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "Q"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "4",
+                "Schedule": "1234567",
+                "SubClass": "Q"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "Q"
+            }
+        ],
+        [
+            {
+                "ClassGrade": "Y",
+                "Schedule": "1234567",
+                "Quantity": "9",
+                "Baggage": "去程-CAN-TYO: 普通乘客:1件,每件23公斤；|TYO-LAX: 普通乘客:1件,每件23公斤；；回程-LAX-TYO: 普通乘客:1件,每件23公斤；|TYO-CAN: 普通乘客:1件,每件23公斤；",
+                "SubClass": "H"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "H"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "4",
+                "Schedule": "1234567",
+                "SubClass": "H"
+            },
+            {
+                "ClassGrade": "Y",
+                "Quantity": "9",
+                "Schedule": "1234567",
+                "SubClass": "H"
+            }
+        ]
+    ]
+}
