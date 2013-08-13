@@ -5,6 +5,7 @@
 -- begin of the idea : http://rhomobi.com/topics/
 -- price of agent for elong website : http://flight.elong.com/beijing-shanghai/cn_day19.html
 -- load library
+local base64 = require 'base64'
 local socket = require 'socket'
 local http = require 'socket.http'
 local JSON = require 'cjson'
@@ -132,7 +133,7 @@ if res ~= nil then
 			for f = 1, table.getn(flts) do
 				print("当前航班" .. f .. "/" .. table.getn(flts) .. ",正在处理" .. flts[f]);
 				print("---------------------------")
-				local fltmuli = "idx-elong/" .. string.lower(org) .. "/" .. string.lower(dst) .. "/" .. string.lower(flts[f]) .. "/" .. t .. "/";
+				local fltmuli = "idx-elong/" .. string.lower(org) .. "/" .. string.lower(dst) .. "/" .. string.lower(flts[f]) .. "/" .. t .. "/" .. base64.encode(res[2]) .. "/";
 				-- table.insert(reqs, { fltmuli })
 				print(idxurl .. fltmuli)
 				print("-------------local NO proxy--------------")
