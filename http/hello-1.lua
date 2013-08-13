@@ -1,7 +1,7 @@
 local socket = require("socket")
 local http = require("socket.http")
 local ltn12 = require 'ltn12'
-
+local base64 = require 'base64'
 local JSON = require 'cjson'
 local md5 = require 'md5'
 package.path = "/usr/local/webserver/lua/lib/?.lua;";
@@ -43,6 +43,7 @@ end
 
 local bakdate = os.date("%Y/%m/%d %X", os.time());
 print(bakdate);
+print(base64.decode(base64.encode(bakdate)));
 print(os.date(os.time()))
 
 local tmp = "CZ|0|340|2013/8/1 17:00:00|CAN|False|False|false"

@@ -1,7 +1,7 @@
 local socket = require("socket")
 local http = require("socket.http")
 local ltn12 = require 'ltn12'
-
+local base64 = require 'base64'
 local JSON = require 'cjson'
 local md5 = require 'md5'
 
