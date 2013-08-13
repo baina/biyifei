@@ -124,52 +124,34 @@ local form_data = table.concat(formdata, "&");
 -- form_data = "flightNumber=CZ3907&flightClassType=260&fareId=0&channel=BSP&uniquekey=CZ3907Q078311BSP&arrivecity=shanghai&departcity=beijing&daycount=1&language=cn&viewpath=~/views/list/oneway.aspx&pagename=list&flighttype=0&seatlevel=Y&request.PageName=list&request.FlightType=OneWay&request.DepartCity=BJS&request.DepartCityName=北京&request.DepartCityNameEn=Beijing&request.ArriveCity=SHA&request.ArriveCityName=上海&request.ArriveCityNameEn=Shanghai&request.DepartDate=2013/8/3 0:00&request.BackDate=2013/8/6 0:00&request.DayCount=1&request.BackDayCount=0&request.SeatLevel=Y&request.First_DepartCity=BJS&request.First_DepartCityName=北京&request.First_ArriveCity=SHA&request.First_ArriveCityName=上海&request.First_DepartDate=2013/8/3 0:00&request.Second_DepartCity=SHA&request.Second_DepartCityName=上海&request.Second_ArriveCity=BJS&request.Second_ArriveCityName=北京&request.Second_DepartDate=2013/8/6 0:00&request.IssueCity=BJS&request.Square=0&request.CanOrder=1&request.OrderBy=Price&request.OrderFromId=50&request.ProxyId=ZD&request.AirCorp=0&request.ElongMemberLevel=Common&request.language=cn&request.viewpath=~/views/list/oneway.aspx";
 -- print(formdata);
 if ngx.var.request_method == "GET" then
-	local i = 0;
 	local hc = http:new()
-	while true do
-		local res, err = red:lrange("proxy:work", i, i)
-		-- local res, err = red:lrange("proxy:work", 0, 0)
-		if table.getn(res) == 1 then
-		-- local res, err = red:blpop("proxy:work", 5)
-		-- if res then
-			-- ngx.say(table.getn(res))
-			-- res[1] is ip and port; res[2] is nil.
-			-- ngx.say("http://" .. tostring(res[1]))
-			local ok, code, headers, status, body = hc:request {
-				url = "http://flight.elong.com/isajax/OneWay/GetMorePrices",
-				-- url = "http://labs.rhomobi.com:18081/rholog",
-				proxy = "http://" .. tostring(res[1]),
-				timeout = 4000,
-				method = "POST", -- POST or GET
-				-- add post content-type and cookie
-				headers = { ["Host"] = "flight.elong.com", ["Content-Type"] = "application/x-www-form-urlencoded", ["Content-Length"] = string.len(form_data), ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6"},
-				-- body = ltn12.source.string(form_data),
-				body = form_data,
-			}
-			if body ~= nil then
-				local j = string.gsub(body,'\"([^\"]-)\":','%1=')
-				local tjson, c = string.gsub(j,'%b\[\]','')
-				if c ~= 0 then
-					ngx.print(body);
-					break;
-				end
-			end
-			--[[
-			if code == 200 then
-				ngx.print(body);
-			else
-				ngx.say(code)
-				for k, v in pairs(headers) do
-					ngx.say(k, v);
-				end
-				ngx.print(status)
-			end
-			--]]
-		else
-			ngx.print("failed to lrange the proxy:work, the proxy result is: ", err)
-			break;
+	local ok, code, headers, status, body = hc:request {
+		url = "http://flight.elong.com/isajax/OneWay/GetMorePrices",
+		-- url = "http://labs.rhomobi.com:18081/rholog",
+		proxy = "http://" .. ngx.decode_base64(ngx.var.proxy),
+		timeout = 4000,
+		method = "POST", -- POST or GET
+		-- add post content-type and cookie
+		headers = { ["Host"] = "flight.elong.com", ["Content-Type"] = "application/x-www-form-urlencoded", ["Content-Length"] = string.len(form_data), ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6"},
+		-- body = ltn12.source.string(form_data),
+		body = form_data,
+	}
+	if code == 200 and body ~= nil then
+		-- ngx.print(ngx.decode_base64(ngx.var.proxy))
+		--[[
+		local j = string.gsub(body,'\"([^\"]-)\":','%1=');
+		local tjson, c = string.gsub(j,'%b\[\]','');
+		if c ~= 0 then
+			ngx.print(body);
 		end
-		i = i + 1;
+		--]]
+		ngx.print(body);
+	else
+		ngx.say(code)
+		for k, v in pairs(headers) do
+			ngx.say(k, v);
+		end
+		ngx.print(status)
 	end
 else
 	ngx.exit(ngx.HTTP_FORBIDDEN);

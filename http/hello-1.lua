@@ -43,7 +43,7 @@ end
 
 local bakdate = os.date("%Y/%m/%d %X", os.time());
 print(bakdate);
-print(base64.decode(base64.encode(bakdate)));
+print(base64.encode("119.233.255.53:81"));
 print(os.date(os.time()))
 
 local tmp = "CZ|0|340|2013/8/1 17:00:00|CAN|False|False|false"
