@@ -10,7 +10,7 @@ local xml = require("LuaXml");
 local redis = require "resty.redis"
 local http = require "resty.http"
 -- originality
-local error001 = JSON.encode({ ["resultCode"] = 1, ["description"] = "No response because you has inputted airports"});
+local error001 = JSON.encode({ ["resultCode"] = 1, ["description"] = "No response because you has inputted error"});
 local error002 = JSON.encode({ ["resultCode"] = 2, ["description"] = "Get Prices from extension is no response"});
 function error003 (mes)
 	local res = JSON.encode({ ["resultCode"] = 3, ["description"] = mes});
@@ -26,13 +26,12 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6389)
+local ok, err = red:connect("10.124.20.131", 6389)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
 end
 -- end of nosql init.
-
 if ngx.var.request_method == "POST" then
 	ngx.req.read_body();
 	local pcontent = ngx.req.get_body_data();
@@ -224,7 +223,33 @@ if ngx.var.request_method == "POST" then
 		ngx.print(JSON.encode(bigtab));
 	end
 else
-	ngx.exit(ngx.HTTP_FORBIDDEN);
+	local bigtab = {};
+	-- ngx.exit(ngx.HTTP_FORBIDDEN);
+	if tonumber(ngx.var.gdate) > tonumber(ngx.var.bdate) then
+		ngx.print(error001);
+	else
+		-- start to Get the fltinfo.
+		local res, err = red:zrange("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), 0, -1)
+		if not res then
+			ngx.print(error003("failed to get FlightLine lists of " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst), err));
+			return
+		else
+			-- ngx.say(type(res))
+			for i = 1, table.getn(res) do
+				local res, err = red:hget("pri:" .. res[i], ngx.var.gdate .. "/" .. ngx.var.bdate .. "/")
+				if not res then
+					ngx.print(error003("failed to HGET prices_data info: " .. res[i], err));
+					return
+				else
+					-- ngx.say(res)
+					if res ~= nil then
+						table.insert(bigtab, JSON.decode(res))
+					end
+				end
+			end
+			ngx.print(JSON.encode(bigtab));
+		end
+	end
 end
 -- put it into the connection pool of size 512,
 -- with 0 idle timeout
