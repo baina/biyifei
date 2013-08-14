@@ -242,12 +242,16 @@ else
 					return
 				else
 					-- ngx.say(res)
-					if res ~= nil then
+					if res ~= nil and res ~= JSON.null then
 						table.insert(bigtab, JSON.decode(res))
 					end
 				end
 			end
-			ngx.print(JSON.encode(bigtab));
+			if table.getn(bigtab) > 0 then
+				ngx.print(JSON.encode(bigtab));
+			else
+				ngx.print(error002);
+			end
 		end
 	end
 end
