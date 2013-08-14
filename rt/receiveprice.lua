@@ -98,6 +98,7 @@ if ngx.var.request_method == "POST" then
 			end
 			local seginf = {};
 			local fid = "";
+			local fltscore = "";
 			for i = 1, 2 do
 				local tmpfid = "";
 				for j = 1, table.getn(xscene[2][r][1][i][3]) do
@@ -126,6 +127,7 @@ if ngx.var.request_method == "POST" then
 					table.insert(seginf, tmpseg);
 					if string.len(tmpfid) == 0 then
 						tmpfid = fltkey[1] .. fltkey[2] .. "/" .. fltkey[3] .. fltkey[4];
+						fltscore = tonumber(fltkey[2]);
 					else
 						tmpfid = tmpfid .. "-" .. fltkey[1] .. fltkey[2] .. "/" .. fltkey[3] .. fltkey[4];
 					end
@@ -178,7 +180,7 @@ if ngx.var.request_method == "POST" then
 						fltid = red:get("flt:" .. FlightLineID .. ":id");
 					end
 					-- start to store the fltinfo.
-					local res, err = red:sadd("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), fltid)
+					local res, err = red:zadd("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), fltscore, fltid)
 					if not res then
 						ngx.print(error003("failed to add FlightLine into " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst) .. ":" .. fltid, err));
 						return
