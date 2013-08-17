@@ -1,6 +1,6 @@
 {
     "host": "127.0.0.1",
-    "port": 6388,
+    "port": 6389,
     "maxtime": 90,
     "cachetime": [
         {

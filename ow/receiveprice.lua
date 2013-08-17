@@ -146,7 +146,7 @@ if ngx.var.request_method == "POST" then
 			ctrip["flightline_id"] = FlightLineID;
 			-- ctrip["limit"] = limtab;
 			ctrip["prices_data"] = pritab;
-			
+			-- init of fltid.
 			local fltid = "";
 			local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
 			if not getfidres then
