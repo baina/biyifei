@@ -242,7 +242,7 @@ if ngx.var.request_method == "GET" then
 				-- ngx.print(res.body);
 				local tbody = JSON.decode(res.body);
 				if tbody.resultCode == 1 or tbody.resultCode == 2 then
-					ngx.exit(ngx.HTTP_MOVED_TEMPORARILY);
+					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
 				else
 					ngx.print(res.body);
 				end
