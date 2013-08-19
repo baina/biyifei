@@ -30,7 +30,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6389)
+local ok, err = red:connect("127.0.0.1", 6379)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -44,10 +44,11 @@ if ngx.var.request_method == "POST" then
 		set $source $1;
 		set $org $2;
 		set $dst $3;
-		set $fltno $4;
-		set $date $5;
+		-- set $fltno $4;
+		set $gdate $4;
+		set $bdate $5;
 		--]]
-		local ok, err = red:hset(string.lower(ngx.var.source) .. ':' .. string.lower(ngx.var.org) .. '/' .. string.lower(ngx.var.dst) .. '/' .. ngx.var.date .. '/', string.upper(ngx.var.fltno), pcontent)
+		local ok, err = red:hset('ota:' .. string.upper(ngx.var.org) .. ':' .. string.upper(ngx.var.dst) .. ':' .. string.lower(ngx.var.source), ngx.var.gdate .. '/' .. ngx.var.bdate .. '/', pcontent)
 		if ok then
 			local result = {};
 			result["resultCode"] = 0;

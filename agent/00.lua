@@ -84,7 +84,8 @@ function expiretime (t, c)
 		return timet(t) * (1 - 100 * linet(c))
 	end
 end
-
+-- print(timet(20130820))
+--[[
 for i = 1, table.getn(city) do
 	for j = 1, tonumber(content.maxtime) do
 		local date = datetime(j)
@@ -92,3 +93,4 @@ for i = 1, table.getn(city) do
 		-- print(expiretime(datetime(j), city[i]))
 	end
 end
+--]]
