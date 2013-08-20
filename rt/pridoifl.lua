@@ -26,7 +26,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6379)
+local ok, err = red:connect("192.168.13.2", 6388)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -55,8 +55,14 @@ if ngx.var.request_method == "GET" then
 			if res.status == 200 then
 				-- ngx.print(res.body);
 				local tbody = JSON.decode(res.body);
-				if tbody.resultCode == 1 or tbody.resultCode == 2 then
-					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+				if tbody.resultCode == 2 then
+					local res, err = red:lpush("loc:queues", ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.gdate .. "/");
+					if not res then
+						ngx.exit(ngx.HTTP_BAD_REQUEST);
+					else
+						ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+					end
+					-- ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
 				else
 					ngx.print(res.body);
 				end

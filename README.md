@@ -74,22 +74,22 @@ Example:
 ```bash
 
   if body then
-			local wname = "/data/logs/rholog.txt"
-			local wfile = io.open(wname, "w+");
-			wfile:write(os.date());
-			wfile:write("\r\n---------------------\r\n");
-			wfile:write(pcontent);
-			wfile:write("\r\n---------------------\r\n");
-			wfile:write(ngx.var.remote_addr);
-			wfile:write("\r\n---------------------\r\n");
-			wfile:write(puri);
-			wfile:write("\r\n---------------------\r\n");
-			for k, v in pairs(args) do
-				wfile:write(k .. ":" .. v .. "\n");
-			end
-			wfile:write("\r\n---------------------\r\n");
-			wfile:write(body .. "\n");
-			io.close(wfile);
+		local wname = "/data/logs/rholog.txt"
+		local wfile = io.open(wname, "w+");
+		wfile:write(os.date());
+		wfile:write("\r\n---------------------\r\n");
+		wfile:write(pcontent);
+		wfile:write("\r\n---------------------\r\n");
+		wfile:write(ngx.var.remote_addr);
+		wfile:write("\r\n---------------------\r\n");
+		wfile:write(puri);
+		wfile:write("\r\n---------------------\r\n");
+		for k, v in pairs(args) do
+			wfile:write(k .. ":" .. v .. "\n");
+		end
+		wfile:write("\r\n---------------------\r\n");
+		wfile:write(body .. "\n");
+		io.close(wfile);
 	end
 
 ```

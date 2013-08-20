@@ -26,7 +26,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6379)
+local ok, err = red:connect("192.168.13.2", 6388)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -49,14 +49,25 @@ if ngx.var.request_method == "GET" then
 		-- location ~ '^/extctrip/FlightSearch/([a-zA-Z]{3,4})/([A-Za-z0-9]{3})/([A-Za-z0-9]{3})/([a-zA-Z]{2})/([0-9]{8})$'
 		-- nginx location for ctirp extension.
 		if torg and tdst then
-			ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+			local res, err = red:lpush("loc:queues", ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
+			if not res then
+				ngx.exit(ngx.HTTP_BAD_REQUEST);
+			else
+				ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+			end
 		else
 			local res = ngx.location.capture("/data-ifl/" .. ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
 			if res.status == 200 then
 				-- ngx.print(res.body);
 				local tbody = JSON.decode(res.body);
-				if tbody.resultCode == 1 or tbody.resultCode == 2 then
-					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+				if tbody.resultCode == 2 then
+					local res, err = red:lpush("loc:queues", ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
+					if not res then
+						ngx.exit(ngx.HTTP_BAD_REQUEST);
+					else
+						ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+					end
+					-- ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
 				else
 					ngx.print(res.body);
 				end
