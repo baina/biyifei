@@ -56,7 +56,7 @@ if ngx.var.request_method == "GET" then
 				-- ngx.print(res.body);
 				local tbody = JSON.decode(res.body);
 				if tbody.resultCode == 2 then
-					local res, err = red:lpush("loc:queues", ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.gdate .. "/");
+					local res, err = red:lpush("loc:queues", "1/" .. ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.gdate .. "/");
 					if not res then
 						ngx.exit(ngx.HTTP_BAD_REQUEST);
 					else

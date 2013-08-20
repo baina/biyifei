@@ -49,7 +49,7 @@ if ngx.var.request_method == "GET" then
 		-- location ~ '^/extctrip/FlightSearch/([a-zA-Z]{3,4})/([A-Za-z0-9]{3})/([A-Za-z0-9]{3})/([a-zA-Z]{2})/([0-9]{8})$'
 		-- nginx location for ctirp extension.
 		if torg and tdst then
-			local res, err = red:lpush("loc:queues", ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
+			local res, err = red:lpush("loc:queues", "1/" .. ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
 			if not res then
 				ngx.exit(ngx.HTTP_BAD_REQUEST);
 			else
@@ -61,7 +61,7 @@ if ngx.var.request_method == "GET" then
 				-- ngx.print(res.body);
 				local tbody = JSON.decode(res.body);
 				if tbody.resultCode == 2 then
-					local res, err = red:lpush("loc:queues", ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
+					local res, err = red:lpush("loc:queues", "1/" .. ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
 					if not res then
 						ngx.exit(ngx.HTTP_BAD_REQUEST);
 					else
