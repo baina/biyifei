@@ -38,19 +38,25 @@ end
 local client = redis.connect(params)
 -- client:select(0) -- for testing purposes
 -- client:exists("price:comb")
+local baseurl = "http://api.bestfly.cn/"
 while true do
 	local arg, err = client:blpop("price:comb", 1)
 	if not arg then
 		print("wait for 5 second.")
 		sleep(5)
 	else
-		arg = arg[2]
-		local capi = "http://api.bestfly.cn/capi/ext-price/" .. string.sub(arg, 1, 8) .. "ow/" .. string.sub(arg, -9, -1);
-		local api = "http://api.bestfly.cn/ext-price/" .. string.sub(arg, 1, 8) .. "ow/" .. string.sub(arg, -9, -1);
+		arg = arg[2];
+		local carg = string.sub(arg, 11, -1);
+		local capi = "http://api.bestfly.cn/capi/" .. string.gsub(carg, "/", "") .. "/";
+		local api = baseurl .. arg;
+		print(capi);
+		print("------------start to capi------------")
 		local body, code, headers = http.request(capi)
 		if code == 200 then
 			print(code, body);
 			print("------------capi sucess------------")
+			print(api);
+			print("------------start to combinate----------")
 			local body, code, headers = http.request(api)
 			if code == 200 then
 				print(code);

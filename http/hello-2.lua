@@ -1,3 +1,13 @@
+local a = "ext-price/bjs/lax/rt/20130930/20131010/";
+local b = "slf-price/bjs/sha/ow/20130930/"
+
+a = string.sub(a, 11, -1);
+b = string.sub(b, 11, -1);
+print(a)
+a = string.gsub(a, "/", "");
+print(a)
+print(b)
+
 local socket = require("socket")
 local http = require("socket.http")
 local ltn12 = require 'ltn12'

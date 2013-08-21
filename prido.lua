@@ -237,19 +237,7 @@ if ngx.var.request_method == "GET" then
 				ngx.print(error002);
 			end
 		else
-			local res = ngx.location.capture("/data-ifl/" .. ngx.var.org .. "/" .. ngx.var.dst .. "/" .. ngx.var.date .. "/");
-			if res.status == 200 then
-				-- ngx.print(res.body);
-				local tbody = JSON.decode(res.body);
-				-- if tbody.resultCode == 1 or tbody.resultCode == 2 then
-				if tbody.resultCode == 2 then
-					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
-				else
-					ngx.print(res.body);
-				end
-			else
-				ngx.print(error002);
-			end
+			ngx.exit(ngx.HTTP_BAD_REQUEST);
 		end
 	end
 	-- put it into the connection pool of size 512,
