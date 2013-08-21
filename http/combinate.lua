@@ -57,7 +57,22 @@ while true do
 			print("------------capi sucess------------")
 			print(api);
 			print("------------start to combinate----------")
-			local body, code, headers = http.request(api)
+			
+			local respbody = {};
+			local body, code, headers, status = http.request {
+				url = api,
+				--- proxy = "http://127.0.0.1:8888",
+				--- proxy = "http://" .. tostring(res[2]),
+				timeout = 10000,
+				method = "GET", -- POST or GET
+				-- add post content-type and cookie
+				-- headers = { ["Host"] = "flight.elong.com", ["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6" },
+				-- body = formdata,
+				-- source = ltn12.source.string(form_data);
+				sink = ltn12.sink.table(respbody)
+			}
+			
+			-- local body, code, headers = http.request(api)
 			if code == 200 then
 				print(code);
 				print("------------combinate price sucess------------")
