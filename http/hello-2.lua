@@ -1,3 +1,13 @@
+
+
+local socket = require("socket")
+local http = require("socket.http")
+local ltn12 = require 'ltn12'
+local base64 = require 'base64'
+local JSON = require 'cjson'
+local md5 = require 'md5'
+local zlib = require 'zlib'
+
 local a = "ext-price/bjs/lax/rt/20130930/20131010/";
 local b = "slf-price/bjs/sha/ow/20130930/"
 
@@ -8,12 +18,8 @@ a = string.gsub(a, "/", "");
 print(a)
 print(b)
 
-local socket = require("socket")
-local http = require("socket.http")
-local ltn12 = require 'ltn12'
-local base64 = require 'base64'
-local JSON = require 'cjson'
-local md5 = require 'md5'
+print(zlib.version())
+
 
 -- print(arg[0])
 print(arg[1])
@@ -181,7 +187,7 @@ function dispatcher ()
 end
 
 
-
+--[[
 local http = require "socket.http"
 local ltn12 = require "ltn12"
 --local util = require "util"
@@ -206,3 +212,5 @@ local ltn12 = require "ltn12"
     LOGINFO('code:' .. tostring(code))
     LOGINFO('headers:' .. util.tableToString(headers))
     LOGINFO('status:' .. tostring(status))
+
+-- ]]
