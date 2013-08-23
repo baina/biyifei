@@ -37,12 +37,12 @@ if not ok then
 end
 -- end of nosql init.
 if ngx.var.request_method == "POST" then
+	local args = "";
 	ngx.req.read_body();
 	local pcontent = ngx.req.get_body_data();
 	if pcontent ~= nil and pcontent ~= JSON.null then
 		-- ngx.say(pcontent);
 		local tbody = JSON.decode(pcontent)
-		local args = "";
 		if tbody.TYPE == "ow" then
 			if tbody.CATEGORY == "dom" then
 				-- /slf-price/hrb/bos/ow/20130823/
@@ -57,23 +57,27 @@ if ngx.var.request_method == "POST" then
 			args = "ext-price/" .. string.sub(tbody.ARG, 1, 8) .. "rt/" .. string.sub(tbody.ARG, -18, -1);
 		end
 		-- ngx.say(args)
-		if tbody.LEVEL == 0 then
-			-- ngx.say("rpush")
-			local res, err = red:rpush("price:comb", args)
-			if not res then
-				ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
-			else
-				ngx.exit(ngx.HTTP_OK);
+		if args ~= "" then
+			if tbody.LEVEL == 0 then
+				-- ngx.say("rpush")
+				local res, err = red:rpush("price:comb", args)
+				if not res then
+					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+				else
+					ngx.exit(ngx.HTTP_OK);
+				end
 			end
-		end
-		if tbody.LEVEL == 1 then
-			-- ngx.say("lpush")
-			local res, err = red:lpush("price:comb", args)
-			if not res then
-				ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
-			else
-				ngx.exit(ngx.HTTP_OK);
+			if tbody.LEVEL == 1 then
+				-- ngx.say("lpush")
+				local res, err = red:lpush("price:comb", args)
+				if not res then
+					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+				else
+					ngx.exit(ngx.HTTP_OK);
+				end
 			end
+		else
+			ngx.exit(ngx.HTTP_BAD_REQUEST);
 		end
 	end
 else
