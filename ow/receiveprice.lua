@@ -9,6 +9,7 @@ local JSON = require("cjson");
 local xml = require("LuaXml");
 local redis = require "resty.redis"
 local http = require "resty.http"
+local zlib = require 'zlib'
 -- originality
 local error001 = JSON.encode({ ["resultCode"] = 1, ["description"] = "No response because you has inputted error"});
 local error002 = JSON.encode({ ["resultCode"] = 2, ["description"] = "Get Prices from extension is no response"});
@@ -34,7 +35,7 @@ end
 -- end of nosql init.
 if ngx.var.request_method == "POST" then
 	ngx.req.read_body();
-	local pcontent = ngx.req.get_body_data();
+	local pcontent = zlib.decompress(ngx.req.get_body_data());
 	if pcontent then
 		-- ngx.print(type(pcontent));
 		local pr_xml = xml.eval(pcontent);
@@ -146,7 +147,7 @@ if ngx.var.request_method == "POST" then
 			ctrip["flightline_id"] = FlightLineID;
 			-- ctrip["limit"] = limtab;
 			ctrip["prices_data"] = pritab;
-			-- init of fltid.
+			
 			local fltid = "";
 			local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
 			if not getfidres then

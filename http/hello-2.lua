@@ -19,8 +19,48 @@ print(a)
 print(b)
 
 print(zlib.version())
-
-
+local body, code, headers = http.request("http://api.bestfly.cn/ext-price/can/lax/rt/20130819/20130820/")
+if code == 200 then
+	-- print(body)
+	local data = zlib.compress(body)
+	print("--------------")
+	print(string.len(data))
+	print("--------------")
+	print("--------------")
+	print(string.len(body))
+	print("--------------")
+	local respbody = {};
+	-- local hc = http:new()
+	local body, code, headers, status = http.request {
+	-- local ok, code, headers, status, body = http.request {
+		url = "http://localhost:9001/data-gzip/can/lax/rt/20130801/20130802/",
+		--- proxy = "http://127.0.0.1:8888",
+		timeout = 3000,
+		method = "POST", -- POST or GET
+		-- add post content-type and cookie
+		headers = { ["Encoding"] = "gzip", ["Content-Length"] = string.len(data) },
+		-- body = formdata,
+		source = ltn12.source.string(data),
+		sink = ltn12.sink.table(respbody)
+	}
+	print(code)
+	for k, v in pairs(headers) do
+		print(k, v);
+	end
+	print(status)
+	print(body)
+	print(table.getn(respbody))
+	local tmp = "";
+	local reslen = table.getn(respbody)
+	for i = 1, reslen do
+		-- print(respbody[i])
+		-- tmp = tmp + respbody[i]
+		print(type(respbody[i]))
+	end
+	print("--------------")
+	print(string.len(tmp))
+	print("--------------")
+end
 -- print(arg[0])
 print(arg[1])
 -- print(arg[2])

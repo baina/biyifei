@@ -38,16 +38,19 @@ end
 local client = redis.connect(params)
 -- client:select(0) -- for testing purposes
 -- client:exists("price:comb")
-local baseurl = "http://api.bestfly.cn/"
+local baseurl = "http://bestfly:9090/"
 while true do
 	local arg, err = client:blpop("price:comb", 1)
-	if not arg then
+	if not arg or arg == nil then
 		print("wait for 5 second.")
 		sleep(5)
 	else
 		arg = arg[2];
+		if arg == nil or arg == "" then print("wait for 3 second.") sleep(3) else
+		print(arg);
+		print("---------------");
 		local carg = string.sub(arg, 11, -1);
-		local capi = "http://api.bestfly.cn/capi/" .. string.gsub(carg, "/", "") .. "/";
+		local capi = baseurl .. "capi/" .. string.gsub(carg, "/", "") .. "/";
 		local api = baseurl .. arg;
 		print(capi);
 		print("------------start to capi------------")
@@ -85,6 +88,6 @@ while true do
 		else
 			print(code)
 			print("------------capi error--------------")
-		end
+		end end
 	end
 end
