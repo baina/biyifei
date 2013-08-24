@@ -144,9 +144,10 @@ if ngx.var.request_method == "POST" then
 			local FlightLineID = ngx.md5(fid)
 			local ctrip = {};
 			ctrip["bunks_idx"] = bunktb;
-			ctrip["flightline_id"] = FlightLineID;
 			-- ctrip["limit"] = limtab;
 			ctrip["prices_data"] = pritab;
+			ctrip["flightline_id"] = FlightLineID;
+			ctrip["checksum_seg"] = seginf;
 			
 			local fltid = "";
 			local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
@@ -187,9 +188,10 @@ if ngx.var.request_method == "POST" then
 					end
 					-- checksum_seg
 					-- ngx.say(JSON.encode(seginf))
-					local res, err = red:set("seg:" .. fltid, JSON.encode(seginf))
+					local segstr = JSON.encode(seginf);
+					local res, err = red:hset("seg:" .. fltid, ngx.md5(segstr), segstr)
 					if not res then
-						ngx.print(error003("failed to SET checksum_seg info: " .. fltid, err));
+						ngx.print(error003("failed to HSET checksum_seg info: " .. fltid, err));
 						return
 					end
 					local res, err = red:hset("pri:" .. fltid, ngx.var.gdate, JSON.encode(ctrip))

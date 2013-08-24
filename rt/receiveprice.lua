@@ -27,7 +27,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("10.124.20.131", 6389)
+local ok, err = red:connect("192.168.13.2", 6389)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -144,9 +144,10 @@ if ngx.var.request_method == "POST" then
 		
 			local ctrip = {};
 			ctrip["bunks_idx"] = bunktb;
-			ctrip["flightline_id"] = FlightLineID;
 			-- ctrip["limit"] = limtab;
 			ctrip["prices_data"] = pritab;
+			ctrip["flightline_id"] = FlightLineID;
+			ctrip["checksum_seg"] = seginf;
 			
 			local fltid = "";
 			local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
@@ -187,9 +188,10 @@ if ngx.var.request_method == "POST" then
 					end
 					-- checksum_seg
 					-- ngx.say(JSON.encode(seginf))
-					local res, err = red:set("seg:" .. fltid, JSON.encode(seginf))
+					local segstr = JSON.encode(seginf);
+					local res, err = red:hset("seg:" .. fltid, ngx.md5(segstr), segstr)
 					if not res then
-						ngx.print(error003("failed to SET checksum_seg info: " .. fltid, err));
+						ngx.print(error003("failed to HSET checksum_seg info: " .. fltid, err));
 						return
 					end
 					local res, err = red:hset("pri:" .. fltid, ngx.var.gdate .. "/" .. ngx.var.bdate .. "/", JSON.encode(ctrip))
