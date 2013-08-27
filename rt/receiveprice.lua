@@ -20,22 +20,82 @@ end
 -- ready to connect to master redis.
 local red, err = redis:new()
 if not red then
-	ngx.say("failed to instantiate redis: ", err)
+	ngx.say("failed to instantiate main redis: ", err)
+	return
+end
+local ota, err = redis:new()
+if not red then
+	ngx.say("failed to instantiate otas redis: ", err)
 	return
 end
 -- lua socket timeout
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
-red:set_timeout(1000) -- 1 sec
+red:set_timeout(3000) -- 1 sec
+ota:set_timeout(3000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("192.168.13.2", 6389)
+local ok, err = red:connect("127.0.0.1", 6379)
 if not ok then
-	ngx.say("failed to connect redis: ", err)
+	ngx.say("failed to connect main redis: ", err)
+	return
+end
+local ok, err = ota:connect("192.168.13.2", 6389)
+if not ok then
+	ngx.say("failed to connect otas redis: ", err)
 	return
 end
 -- end of nosql init.
+-- getfid function by FlightLineID, seginf
+function getfid(FlightLineID, seginf)
+	local fltid = "";
+	local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
+	if not getfidres then
+		ngx.print(error003("failed to get the flt:" .. FlightLineID .. ":id: ", getfiderr))
+		return
+	end
+	-- ngx.print(getfidres);
+	-- ngx.print("\r\n---------------------\r\n");
+	if tonumber(getfidres) == nil then
+		-- fare:id INCR
+		-- local farecounter, cerror = red:incr("next.fare.id")
+		local farecounter, cerror = red:incr("flt:id")
+		if not farecounter then
+			ngx.print(error003("failed to INCR flt Line: ", cerror));
+			return
+		else
+			local resultsetnx, fiderror = red:setnx("flt:" .. FlightLineID .. ":id", farecounter)
+			if not resultsetnx then
+				ngx.print(error003("failed to SETNX FlightLineID: " .. FlightLineID, fiderror));
+				return
+			end
+			-- ngx.print("INCR fare result: ", farecounter);
+			-- ngx.print("\r\n---------------------\r\n");
+			-- ngx.print("SETNX fid result: ", resultsetnx);
+			-- ngx.print("\r\n---------------------\r\n");
+			-- if resultsetnx ~= 1 that is SETNX is NOT sucess.
+			if resultsetnx == 1 then
+				fltid = farecounter;
+			else
+				fltid = red:get("flt:" .. FlightLineID .. ":id");
+			end
+			-- checksum_seg
+			-- ngx.say(JSON.encode(seginf))
+			local segstr = JSON.encode(seginf);
+			local res, err = red:hset("seg:" .. fltid, ngx.md5(segstr), segstr)
+			if not res then
+				ngx.print(error003("failed to HSET checksum_seg info: " .. fltid, err));
+				return
+			end
+			return fltid;
+		end
+	else
+		fltid = tonumber(getfidres);
+		return fltid;
+	end
+end
 if ngx.var.request_method == "POST" then
 	ngx.req.read_body();
 	local pcontent = zlib.decompress(ngx.req.get_body_data());
+	-- local pcontent = ngx.req.get_body_data();
 	if pcontent then
 		-- ngx.print(type(pcontent));
 		local pr_xml = xml.eval(pcontent);
@@ -96,7 +156,10 @@ if ngx.var.request_method == "POST" then
 				-- ngx.say(JSON.encode(idxtab))
 				-- ngx.say(JSON.encode(tmppri))
 			end
-			local seginf = {};
+			local gseginf = {};
+			local bseginf = {};
+			local gfid = "";
+			local bfid = "";
 			local fid = "";
 			local fltscore = "";
 			for i = 1, 2 do
@@ -124,7 +187,11 @@ if ngx.var.request_method == "POST" then
 							end
 						end
 					end
-					table.insert(seginf, tmpseg);
+					if string.len(fid) == 0 then
+						table.insert(gseginf, tmpseg);
+					else
+						table.insert(bseginf, tmpseg);
+					end
 					if string.len(tmpfid) == 0 then
 						tmpfid = fltkey[1] .. fltkey[2] .. "/" .. fltkey[3] .. fltkey[4];
 						fltscore = tonumber(fltkey[2]);
@@ -134,119 +201,126 @@ if ngx.var.request_method == "POST" then
 				end
 				if string.len(fid) == 0 then
 					fid = tmpfid;
+					gfid = tmpfid;
 				else
 					fid = fid .. "," .. tmpfid;
+					bfid = tmpfid;
 				end
 				tmpfid = "";
 			end
 			-- Caculate FlightLineID
 			local FlightLineID = ngx.md5(fid)
-		
+			local gFlightLineID = ngx.md5(gfid)
+			local bFlightLineID = ngx.md5(bfid)
 			local ctrip = {};
 			ctrip["bunks_idx"] = bunktb;
 			-- ctrip["limit"] = limtab;
 			ctrip["prices_data"] = pritab;
 			ctrip["flightline_id"] = FlightLineID;
-			ctrip["checksum_seg"] = seginf;
+			-- ctrip["checksum_seg"] = seginf;
 			
-			local fltid = "";
-			local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
-			if not getfidres then
-				ngx.print(error003("failed to get the flt:" .. FlightLineID .. ":id: ", getfiderr))
+			local gfltid = getfid(gFlightLineID, gseginf)
+			local bfltid = getfid(bFlightLineID, bseginf)
+
+			local tmpbid, terr = red:hget("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), gfltid)
+			if not tmpbid then
+				ngx.print(error003("failed to get tmpbid from " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst) .. ":" .. gfltid, err));
 				return
-			end
-			-- ngx.print(getfidres);
-			-- ngx.print("\r\n---------------------\r\n");
-			if tonumber(getfidres) == nil then
-				-- fare:id INCR
-				-- local farecounter, cerror = red:incr("next.fare.id")
-				local farecounter, cerror = red:incr("flt:id")
-				if not farecounter then
-					ngx.print(error003("failed to INCR flt Line: ", cerror));
-					return
-				else
-					local resultsetnx, fiderror = red:setnx("flt:" .. FlightLineID .. ":id", farecounter)
-					if not resultsetnx then
-						ngx.print(error003("failed to SETNX FlightLineID: " .. FlightLineID, fiderror));
-						return
-					end
-					-- ngx.print("INCR fare result: ", farecounter);
-					-- ngx.print("\r\n---------------------\r\n");
-					-- ngx.print("SETNX fid result: ", resultsetnx);
-					-- ngx.print("\r\n---------------------\r\n");
-					-- if resultsetnx ~= 1 that is SETNX is NOT sucess.
-					if resultsetnx == 1 then
-						fltid = farecounter;
-					else
-						fltid = red:get("flt:" .. FlightLineID .. ":id");
-					end
-					-- start to store the fltinfo.
-					local res, err = red:zadd("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), fltscore, fltid)
-					if not res then
-						ngx.print(error003("failed to add FlightLine into " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst) .. ":" .. fltid, err));
-						return
-					end
-					-- checksum_seg
-					-- ngx.say(JSON.encode(seginf))
-					local segstr = JSON.encode(seginf);
-					local res, err = red:hset("seg:" .. fltid, ngx.md5(segstr), segstr)
-					if not res then
-						ngx.print(error003("failed to HSET checksum_seg info: " .. fltid, err));
-						return
-					end
-					local res, err = red:hset("pri:" .. fltid, ngx.var.gdate .. "/" .. ngx.var.bdate .. "/", JSON.encode(ctrip))
-					if not res then
-						ngx.print(error003("failed to HSET prices_data info: " .. fltid, err));
-						return
-					else
-						-- ngx.print(JSON.encode(ctrip))
-						table.insert(bigtab, ctrip)
-					end
-				end
 			else
-				-- ngx.say(JSON.encode(seginf))
-				-- ngx.say(JSON.encode(pritab))
-				-- ngx.say(JSON.encode(bunktb))
-				fltid = tonumber(getfidres);
-				-- local res, err = red:set("pri:" .. fltid, JSON.encode(ctrip))
-				local res, err = red:hset("pri:" .. fltid, ngx.var.gdate .. "/" .. ngx.var.bdate .. "/", JSON.encode(ctrip))
-				if not res then
-					ngx.print(error003("failed to HSET prices_data info: " .. fltid, err));
-					return
+				if tmpbid ~= JSON.null then
+					tmpbid = JSON.decode(tmpbid);
+					local rbid = {};
+					for k, v in pairs(tmpbid) do
+						rbid[v] = true;
+					end
+					if rbid[bfltid] ~= true then
+						table.insert(tmpbid, bfltid);
+						-- start to store the fltinfo.
+						local res, err = red:hset("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), gfltid, JSON.encode(tmpbid))
+						if not res then
+							ngx.print(error003("failed to add tmpbid into " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst) .. ":" .. gfltid, err));
+							return
+						end
+					end
 				else
-					-- ngx.print(JSON.encode(ctrip))
-					table.insert(bigtab, ctrip)
+					tmpbid = {};
+					table.insert(tmpbid, bfltid);
+					-- start to store the fltinfo.
+					local res, err = red:hset("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), gfltid, JSON.encode(tmpbid))
+					if not res then
+						ngx.print(error003("failed to add tmpbid into " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst) .. ":" .. gfltid, err));
+						return
+					end
 				end
 			end
-			-- ngx.say(JSON.encode(seginf))
-			-- ngx.say(fid)
-			-- ngx.say(FlightLineID)
-			-- ngx.say(fltid)
+			local res, err = red:hset("pri:rt:" .. gfltid .. ":" .. bfltid, ngx.var.gdate .. "/" .. ngx.var.bdate .. "/", JSON.encode(ctrip))
+			if not res then
+				ngx.print(error003("failed to HSET prices_data info: " .. fltid, err));
+				return
+			else
+				-- ngx.print(JSON.encode(ctrip))
+				table.insert(bigtab, ctrip)
+			end
 		end
 		ngx.print(JSON.encode(bigtab));
 	end
 else
-	local bigtab = {};
 	-- ngx.exit(ngx.HTTP_FORBIDDEN);
 	if tonumber(ngx.var.gdate) > tonumber(ngx.var.bdate) then
 		ngx.print(error001);
 	else
+		local bigtab = {};
+		-- kayak
+		local kayak = {};
+		local kay, krr = ota:hget('ota:' .. string.upper(ngx.var.org) .. ':' .. string.upper(ngx.var.dst) .. ':' .. 'kayak', ngx.var.gdate .. '/' .. ngx.var.bdate .. '/')
+		if not kay then
+			ngx.print(error003("failed to get otas prices from " .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst) .. ":" .. "kayak", err));
+			return
+		else
+			-- ngx.say(kay)
+			if kay ~= JSON.null and kay ~= nil then
+				kay = JSON.decode(kay);
+				for i = 1, table.getn(kay) do
+					kayak[kay[i].flightline_id] = kay[i].strPrice;
+				end
+			end
+		end
 		-- start to Get the fltinfo.
-		local res, err = red:zrange("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), 0, -1)
+		local res, err = red:hgetall("rt:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst))
 		if not res then
-			ngx.print(error003("failed to get FlightLine lists of " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst), err));
+			ngx.print(error003("failed to hget FlightLine combinations of " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst), err));
 			return
 		else
 			-- ngx.say(type(res))
-			for i = 1, table.getn(res) do
-				local res, err = red:hget("pri:" .. res[i], ngx.var.gdate .. "/" .. ngx.var.bdate .. "/")
-				if not res then
-					ngx.print(error003("failed to HGET prices_data info: " .. res[i], err));
-					return
-				else
-					-- ngx.say(res)
-					if res ~= nil and res ~= JSON.null then
-						table.insert(bigtab, JSON.decode(res))
+			-- ngx.say(table.getn(res))
+			local idxs = table.getn(res)
+			for i = 1, idxs do
+				if math.fmod(i, 2) == 0 then
+					-- ngx.say(res[i-1])
+					for k, v in pairs(JSON.decode(res[i])) do
+						-- ngx.say(res[i-1], v)
+						local pres, perr = red:hget("pri:rt:" .. res[i-1] .. ":" .. v, ngx.var.gdate .. "/" .. ngx.var.bdate .. "/")
+						if not pres then
+							ngx.print(error003("failed to HGET prices_data info: " .. res[i-1] .. ":" .. v, err));
+							return
+						else
+							if pres ~= nil and pres ~= JSON.null then
+								-- table.insert(bigtab, JSON.decode(pres))
+								local pritab = JSON.decode(pres);
+								if kayak[pritab.flightline_id] ~= nil then
+									-- ngx.say(kayak[pritab.flightline_id])
+									local kpri = {};
+									local ky = {};
+									kpri["Price"] = kayak[pritab.flightline_id]
+									ky["priceinfo"] = kpri
+									ky["salelimit"] = JSON.null;
+									pritab.prices_data[1]["kayak"] = ky
+									table.insert(bigtab, pritab)
+								else
+									table.insert(bigtab, JSON.decode(pres))
+								end
+							end
+						end
 					end
 				end
 			end
@@ -263,5 +337,10 @@ end
 local ok, err = red:set_keepalive(0, 512)
 if not ok then
 	ngx.say("failed to set keepalive redis: ", err)
+	return
+end
+local ok, err = ota:set_keepalive(0, 512)
+if not ok then
+	ngx.say("failed to set keepalive otas redis: ", err)
 	return
 end

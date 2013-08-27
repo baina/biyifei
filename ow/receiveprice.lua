@@ -20,22 +20,34 @@ end
 -- ready to connect to master redis.
 local red, err = redis:new()
 if not red then
-	ngx.say("failed to instantiate redis: ", err)
+	ngx.say("failed to instantiate main redis: ", err)
+	return
+end
+local ota, err = redis:new()
+if not red then
+	ngx.say("failed to instantiate otas redis: ", err)
 	return
 end
 -- lua socket timeout
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
-red:set_timeout(1000) -- 1 sec
+red:set_timeout(3000) -- 1 sec
+ota:set_timeout(3000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("10.124.20.131", 6389)
+local ok, err = red:connect("10.124.20.136", 6379)
 if not ok then
-	ngx.say("failed to connect redis: ", err)
+	ngx.say("failed to connect main redis: ", err)
+	return
+end
+local ok, err = ota:connect("10.124.20.131", 6389)
+if not ok then
+	ngx.say("failed to connect otas redis: ", err)
 	return
 end
 -- end of nosql init.
 if ngx.var.request_method == "POST" then
 	ngx.req.read_body();
-	local pcontent = zlib.decompress(ngx.req.get_body_data());
+	-- local pcontent = zlib.decompress(ngx.req.get_body_data());
+	local pcontent = ngx.req.get_body_data();
 	if pcontent then
 		-- ngx.print(type(pcontent));
 		local pr_xml = xml.eval(pcontent);
@@ -147,7 +159,7 @@ if ngx.var.request_method == "POST" then
 			-- ctrip["limit"] = limtab;
 			ctrip["prices_data"] = pritab;
 			ctrip["flightline_id"] = FlightLineID;
-			ctrip["checksum_seg"] = seginf;
+			-- ctrip["checksum_seg"] = seginf;
 			
 			local fltid = "";
 			local getfidres, getfiderr = red:get("flt:" .. FlightLineID .. ":id")
@@ -194,7 +206,7 @@ if ngx.var.request_method == "POST" then
 						ngx.print(error003("failed to HSET checksum_seg info: " .. fltid, err));
 						return
 					end
-					local res, err = red:hset("pri:" .. fltid, ngx.var.gdate, JSON.encode(ctrip))
+					local res, err = red:hset("pri:ow:" .. fltid, ngx.var.gdate, JSON.encode(ctrip))
 					if not res then
 						ngx.print(error003("failed to HSET prices_data info: " .. fltid, err));
 						return
@@ -208,8 +220,8 @@ if ngx.var.request_method == "POST" then
 				-- ngx.say(JSON.encode(pritab))
 				-- ngx.say(JSON.encode(bunktb))
 				fltid = tonumber(getfidres);
-				-- local res, err = red:set("pri:" .. fltid, JSON.encode(ctrip))
-				local res, err = red:hset("pri:" .. fltid, ngx.var.gdate, JSON.encode(ctrip))
+				-- local res, err = red:set("pri:ow:" .. fltid, JSON.encode(ctrip))
+				local res, err = red:hset("pri:ow:" .. fltid, ngx.var.gdate, JSON.encode(ctrip))
 				if not res then
 					ngx.print(error003("failed to HSET prices_data info: " .. fltid, err));
 					return
@@ -229,6 +241,22 @@ else
 	local bigtab = {};
 	-- ngx.exit(ngx.HTTP_FORBIDDEN);
 	-- start to Get the fltinfo.
+	-- kayak
+	local kayak = {};
+	local kay, krr = ota:hget('ota:' .. string.upper(ngx.var.org) .. ':' .. string.upper(ngx.var.dst) .. ':' .. 'kayak', ngx.var.gdate)
+	if not kay then
+		ngx.print(error003("failed to get otas prices from " .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst) .. ":" .. "kayak", err));
+		return
+	else
+		-- ngx.say(kay)
+		if kay ~= JSON.null and kay ~= nil then
+			kay = JSON.decode(kay);
+			for i = 1, table.getn(kay) do
+				kayak[kay[i].flightline_id] = kay[i].strPrice;
+			end
+		end
+	end
+	-- ctrip
 	local res, err = red:zrange("ow:" .. string.upper(ngx.var.org) .. ":" .. string.upper(ngx.var.dst), 0, -1)
 	if not res then
 		ngx.print(error003("failed to get FlightLine lists of " .. string.upper(ngx.var.org) .. "/" .. string.upper(ngx.var.dst), err));
@@ -236,14 +264,26 @@ else
 	else
 		-- ngx.say(type(res))
 		for i = 1, table.getn(res) do
-			local res, err = red:hget("pri:" .. res[i], ngx.var.gdate)
-			if not res then
+			local pres, perr = red:hget("pri:ow:" .. res[i], ngx.var.gdate)
+			if not pres then
 				ngx.print(error003("failed to HGET prices_data info: " .. res[i], err));
 				return
 			else
-				-- ngx.say(res)
-				if res ~= nil and res ~= JSON.null then
-					table.insert(bigtab, JSON.decode(res))
+				-- ngx.say(pres)
+				if pres ~= nil and pres ~= JSON.null then
+					local pritab = JSON.decode(pres);
+					if kayak[pritab.flightline_id] ~= nil then
+						-- ngx.say(kayak[pritab.flightline_id])
+						local kpri = {};
+						local ky = {};
+						kpri["Price"] = kayak[pritab.flightline_id]
+						ky["priceinfo"] = kpri
+						ky["salelimit"] = JSON.null;
+						pritab.prices_data[1]["kayak"] = ky
+						table.insert(bigtab, pritab)
+					else
+						table.insert(bigtab, JSON.decode(pres))
+					end
 				end
 			end
 		end
@@ -258,6 +298,11 @@ end
 -- with 0 idle timeout
 local ok, err = red:set_keepalive(0, 512)
 if not ok then
-	ngx.say("failed to set keepalive redis: ", err)
+	ngx.say("failed to set keepalive main redis: ", err)
+	return
+end
+local ok, err = ota:set_keepalive(0, 512)
+if not ok then
+	ngx.say("failed to set keepalive otas redis: ", err)
 	return
 end
