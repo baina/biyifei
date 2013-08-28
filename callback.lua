@@ -30,7 +30,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("127.0.0.1", 6379)
+local ok, err = red:connect("192.168.13.2", 6389)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -57,23 +57,50 @@ if ngx.var.request_method == "POST" then
 			args = "ext-price/" .. string.sub(tbody.ARG, 1, 8) .. "rt/" .. string.sub(tbody.ARG, -18, -1);
 		end
 		-- ngx.say(args)
-		if args ~= "" then
-			if tbody.LEVEL == 0 then
-				-- ngx.say("rpush")
-				local res, err = red:rpush("price:comb", args)
-				if not res then
-					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
-				else
-					ngx.exit(ngx.HTTP_OK);
+		if args ~= "" and args ~= nil and args ~= JSON.null then
+			local lres, lerr = red:linsert("price:comb", "before", args, args)
+			if lres == -1 then
+				if tbody.LEVEL == 0 then
+					-- ngx.say("rpush")
+					local res, err = red:rpush("price:comb", args)
+					if not res then
+						ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+					else
+						ngx.exit(ngx.HTTP_OK);
+					end
 				end
-			end
-			if tbody.LEVEL == 1 then
-				-- ngx.say("lpush")
-				local res, err = red:lpush("price:comb", args)
-				if not res then
-					ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
-				else
-					ngx.exit(ngx.HTTP_OK);
+				if tbody.LEVEL == 1 then
+					-- ngx.say("lpush")
+					local res, err = red:lpush("price:comb", args)
+					if not res then
+						ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+					else
+						ngx.exit(ngx.HTTP_OK);
+					end
+				end
+			else
+				if tbody.LEVEL == 0 then
+					-- ngx.say("rpush")
+					local res, err = red:lrem("price:comb", 1, args)
+					if not res then
+						ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+					else
+						ngx.exit(ngx.HTTP_OK);
+					end
+				end
+				if tbody.LEVEL == 1 then
+					-- ngx.say("lpush")
+					local res, err = red:lrem("price:comb", 0, args)
+					if not res then
+						ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+					else
+						local res, err = red:lpush("price:comb", args)
+						if not res then
+							ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE);
+						else
+							ngx.exit(ngx.HTTP_OK);
+						end
+					end
 				end
 			end
 		else
