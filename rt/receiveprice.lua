@@ -307,17 +307,24 @@ else
 							if pres ~= nil and pres ~= JSON.null then
 								-- table.insert(bigtab, JSON.decode(pres))
 								local pritab = JSON.decode(pres);
-								if kayak[pritab.flightline_id] ~= nil then
-									-- ngx.say(kayak[pritab.flightline_id])
-									local kpri = {};
-									local ky = {};
-									kpri["Price"] = kayak[pritab.flightline_id]
-									ky["priceinfo"] = kpri
-									ky["salelimit"] = JSON.null;
-									pritab.prices_data[1]["kayak"] = ky
-									table.insert(bigtab, pritab)
+								-- store for getseg of res[i-1] .. v = flightline_id
+								local r, e = red:setnx("seg:rt:" .. pritab.flightline_id, res[i-1] .. "," .. v)
+								if not r then
+									ngx.print(error003("failed to set seg_data_index of seg:rt: " .. pritab.flightline_id, err));
+									return
 								else
-									table.insert(bigtab, JSON.decode(pres))
+									if kayak[pritab.flightline_id] ~= nil then
+										-- ngx.say(kayak[pritab.flightline_id])
+										local kpri = {};
+										local ky = {};
+										kpri["Price"] = kayak[pritab.flightline_id]
+										ky["priceinfo"] = kpri
+										ky["salelimit"] = JSON.null;
+										pritab.prices_data[1]["kayak"] = ky
+										table.insert(bigtab, pritab)
+									else
+										table.insert(bigtab, JSON.decode(pres))
+									end
 								end
 							end
 						end

@@ -69,6 +69,10 @@ if ngx.var.request_method == "POST" then
 			local cutpri = {};
 			-- ngx.say(pcontent.prices_data[1].priceinfo.strPrice)
 			cutpri["flightline_id"] = pcontent.flightline_id
+			cutpri["fltnocombination"] = pcontent.fltnocombination
+			cutpri["nsflightline_id"] = pcontent.nsflightline_id
+			cutpri["sourceName"] = pcontent.sourceName
+			cutpri["updateTime"] = pcontent.updateTime
 			cutpri["strPrice"] = pcontent.prices_data[1].priceinfo.strPrice
 			pcontent = cutpri;
 			local tmppri, err = red:hget('ota:' .. string.upper(ngx.var.org) .. ':' .. string.upper(ngx.var.dst) .. ':' .. string.lower(ngx.var.source), ngx.var.gdate .. '/' .. ngx.var.bdate .. '/')

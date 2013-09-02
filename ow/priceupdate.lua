@@ -32,7 +32,7 @@ end
 -- Sets the timeout (in ms) protection for subsequent operations, including the connect method.
 red:set_timeout(1000) -- 1 sec
 -- nosql connect
-local ok, err = red:connect("10.124.20.131", 6389)
+local ok, err = red:connect("192.168.13.2", 6389)
 if not ok then
 	ngx.say("failed to connect redis: ", err)
 	return
@@ -53,6 +53,10 @@ if ngx.var.request_method == "POST" then
 		local cutpri = {};
 		-- ngx.say(pcontent.prices_data[1].priceinfo.strPrice)
 		cutpri["flightline_id"] = pcontent.flightline_id
+		cutpri["fltnocombination"] = pcontent.fltnocombination
+		cutpri["nsflightline_id"] = pcontent.nsflightline_id
+		cutpri["sourceName"] = pcontent.sourceName
+		cutpri["updateTime"] = pcontent.updateTime
 		cutpri["strPrice"] = pcontent.prices_data[1].priceinfo.strPrice
 		pcontent = cutpri;
 		local tmppri, err = red:hget('ota:' .. string.upper(ngx.var.org) .. ':' .. string.upper(ngx.var.dst) .. ':' .. string.lower(ngx.var.source), ngx.var.date)
