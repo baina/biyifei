@@ -1685,3 +1685,61 @@ Processing PrikeysController#edit (for 127.0.0.1 at 2013-06-29 15:53:59) [GET]
 Rendering template within layouts/prikeys
 Rendering prikeys/edit
 Completed in 14ms (View: 8, DB: 3) | 200 OK [http://localhost/prikeys/1/edit]
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (2.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Rails::InfoController#properties (for 127.0.0.1 at 2013-09-03 16:07:07) [GET]
+  [4;36;1mSQL (7.1ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (4.2ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Completed in 24ms (View: 2, DB: 19) | 200 OK [http://localhost/rails/info/properties]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-09-03 16:08:06) [GET]
+  [4;36;1mPrikey Load (0.6ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (1.0ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 47ms (View: 40, DB: 2) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#show (for 127.0.0.1 at 2013-09-03 16:08:10) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mPrikey Columns (1.0ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+  [4;35;1mPrikey Load (1.7ms)[0m   [0mSELECT * FROM `prikeys` WHERE (`prikeys`.`id` = 1) [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/show
+Completed in 13ms (View: 6, DB: 3) | 200 OK [http://localhost/prikeys/1]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-09-03 16:08:12) [GET]
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (2.1ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 13ms (View: 6, DB: 2) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#index (for 127.0.0.1 at 2013-09-03 16:08:14) [GET]
+  [4;36;1mPrikey Load (0.2ms)[0m   [0;1mSELECT * FROM `prikeys` [0m
+Rendering template within layouts/prikeys
+Rendering prikeys/index
+  [4;35;1mPrikey Columns (1.1ms)[0m   [0mSHOW FIELDS FROM `prikeys`[0m
+Completed in 9ms (View: 5, DB: 1) | 200 OK [http://localhost/prikeys]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing PrikeysController#new (for 127.0.0.1 at 2013-09-03 16:08:18) [GET]
+  [4;36;1mPrikey Columns (0.9ms)[0m   [0;1mSHOW FIELDS FROM `prikeys`[0m
+Rendering template within layouts/prikeys
+Rendering prikeys/new
+Completed in 20ms (View: 15, DB: 1) | 200 OK [http://localhost/prikeys/new]

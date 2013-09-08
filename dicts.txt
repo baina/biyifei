@@ -1,0 +1,26 @@
+http://flights.ctrip.com/international/tools/GetCities.ashx?s=lon&a=1&t=0
+@LONDON，UNITED KINGDOM|伦敦(英国)(LON)|338|伦敦，英国，LON
+@LONG BEACH，CA，UNITED STATES|长滩(LGB)|7316|长滩，美国，加利福尼亚州，LGB
+@LONGYAN，CHINA|龙岩(LCX)|348|龙岩，中国，LCX
+@LOMBOK，INDONESIA|龙目岛(LOP)|1392|龙目岛，印度尼西亚，LOP
+@RONNEBY，SWEDEN|隆内比 (RNB)|4256|隆内比，瑞典，RNB
+@LONDON(CANADA)，ON，CANADA|伦敦(加拿大)(YXU)|4128|伦敦，加拿大，安大略省，YXU
+@EAST LONDON，SOUTH AFRICA|东伦敦(ELS)|4209|东伦敦，南非，ELS
+@LONGYEARBYEN，NORWAY|朗伊尔城(LYR)|7398|朗伊尔城，挪威，LYR
+
+http://flights.ctrip.com/international/tools/GetCities.ashx?s=lon&a=0&t=0
+@LONDON，UNITED KINGDOM|伦敦(英国)(LON)|338|伦敦，英国，LON
+@LONGYAN，CHINA|龙岩(LCX)|348|龙岩，中国，LCX
+@LONG BEACH，CA，UNITED STATES|长滩(LGB)|7316|长滩，美国，加利福尼亚州，LGB
+@RONNEBY，SWEDEN|隆内比(RNB)|4256|隆内比，瑞典，RNB
+@LOMBOK，INDONESIA|龙目岛(LOP)|1392|龙目岛，印度尼西亚，LOP
+@EAST LONDON，SOUTH AFRICA|东伦敦(ELS)|4209|东伦敦，南非，ELS
+@LONDON(CANADA)，ON，CANADA|伦敦(加拿大) (YXU)|4128|伦敦，加拿大，安大略省，YXU
+@LONGYEARBYEN，NORWAY|朗伊尔城(LYR)|7398|朗伊尔城，挪威，LYR
+
+
+
+{
+    "key": "lon",
+    "data": "@LONDON，UNITED KINGDOM|伦敦(英国)(LON)|338|伦敦，英国，LON@LONGYAN，CHINA|龙岩(LCX)|348|龙岩，中国，LCX@LONG BEACH，CA，UNITED STATES|长滩(LGB)|7316|长滩，美国，加利福尼亚州，LGB@RONNEBY，SWEDEN|隆内比(RNB)|4256|隆内比，瑞典，RNB@LOMBOK，INDONESIA|龙目岛(LOP)|1392|龙目岛，印度尼西亚，LOP@EAST LONDON，SOUTH AFRICA|东伦敦(ELS)|4209|东伦敦，南非，ELS@LONDON(CANADA)，ON，CANADA|伦敦(加拿大)(YXU)|4128|伦敦，加拿大，安大略省，YXU@LONGYEARBYEN，NORWAY|朗伊尔城(LYR)|7398|朗伊尔城，挪威，LYR"
+}
