@@ -8,8 +8,8 @@ package.path = "/usr/local/webserver/lua/lib/?.lua;";
 -- pcall(require, "luarocks.require")
 local redis = require 'redis'
 local params = {
-    host = '127.0.0.1',
-    port = 6389,
+    host = 'rhomobi.com',
+    port = 6388,
 }
 local client = redis.connect(params)
 client:select(0) -- for testing purposes
@@ -40,11 +40,13 @@ local function _formencodepart(s)
 	 	end));
 	end
 end
-
-local bakdate = os.date("%Y/%m/%d %X", os.time());
+-- local bakdate = os.date("%Y/%m/%d %X", os.time());
+local bakdate = os.date("%a, %d %b %Y %X GMT", os.time());
 print(bakdate);
 print(base64.encode("119.233.255.53:81"));
 print(os.date(os.time()))
+local source = "test1234"
+print(md5.sumhexa(source))
 
 local tmp = "CZ|0|340|2013/8/1 17:00:00|CAN|False|False|false"
 
